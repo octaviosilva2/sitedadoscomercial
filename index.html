@@ -41,7 +41,7 @@
   --r-sm:10px;
   --r-md:18px;
   --r-lg:28px;
-  /* tokens fixos — sempre escuros, em qualquer tema (blocos de contraste tipo Apple) */
+  /* tokens fixos: sempre escuros, em qualquer tema (blocos de contraste tipo Apple) */
   --void-bg:#0B0B0D;
   --void-ink:#F5F3EE;
   --void-muted:#ACA9A1;
@@ -123,7 +123,7 @@ p{margin:0;}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong);}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-deep);}
 
-/* cue de rolagem do hero — convite, não pedido de compra */
+/* cue de rolagem do hero: convite, não pedido de compra */
 .hero-cue{
   display:inline-flex;align-items:center;gap:.65rem;
   padding:.85rem 1.5rem;border-radius:100px;
@@ -229,13 +229,13 @@ details[open] .cat-chev{transform:rotate(180deg);}
 .cat-item span.d{color:var(--ink-muted);}
 
 /* ===================== DASHBOARD MOCKUP ===================== */
-.dash-frame{position:relative;margin-top:3rem;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg);overflow:hidden;}
+.dash-frame{position:relative;margin-top:3rem;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg);}
 .excl-badge{position:absolute;top:-14px;right:1.6rem;z-index:2;display:inline-flex;align-items:center;gap:.4rem;padding:.42rem 1.05rem;border-radius:100px;background:var(--void-bg);color:var(--void-gold-bright);font-size:.7rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;box-shadow:var(--shadow-md);}
-.dash-topbar{display:flex;align-items:center;gap:.6rem;padding:.9rem 1.3rem;border-bottom:1px solid var(--line);background:var(--bg-deep);}
+.dash-topbar{display:flex;align-items:center;gap:.6rem;padding:.9rem 1.3rem;border-bottom:1px solid var(--line);background:var(--bg-deep);border-radius:var(--r-lg) var(--r-lg) 0 0;}
 .dash-topbar .traffic{display:flex;gap:.4rem;}
 .dash-topbar .traffic span{width:9px;height:9px;border-radius:50%;background:var(--line-strong);}
 .dash-topbar .url{margin:0 auto;font-family:"Geist Mono",monospace;font-size:.78rem;color:var(--ink-faint);background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:.35rem 1rem;}
-.dash-body{padding:clamp(1.2rem,3vw,2.2rem);display:flex;flex-direction:column;gap:1.3rem;}
+.dash-body{padding:clamp(1.2rem,3vw,2.2rem);display:flex;flex-direction:column;gap:1.3rem;border-radius:0 0 var(--r-lg) var(--r-lg);overflow:hidden;}
 .dash-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;}
 .kpi{padding:1.1rem 1.2rem;border-radius:var(--r-sm);background:var(--bg-subtle);border:1px solid var(--line);display:flex;flex-direction:column;gap:.4rem;}
 .kpi .label{font-size:.73rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;}
@@ -355,8 +355,8 @@ footer{padding:3rem 0;background:var(--void-bg);}
       <div class="hero-grid">
         <div class="hero-copy reveal in">
           <span class="eyebrow">Inteligência Comercial para Sites</span>
-          <h1 style="margin-top:1.1rem;">Você investe em marketing. Mas sabe o que realmente faz alguém <em>virar cliente</em> — ou ir embora — dentro do seu site?</h1>
-          <p class="hero-sub">Anúncio, SEO e um site bonito trazem visita. A maioria das empresas não mede o que acontece depois do clique — e é exatamente aí que a venda se decide.</p>
+          <h1 style="margin-top:1.1rem;">Você investe em marketing. Mas sabe o que realmente faz alguém <em>virar cliente</em>, ou ir embora, dentro do seu site?</h1>
+          <p class="hero-sub">Anúncio, SEO e um site bonito trazem visita. A maioria das empresas não mede o que acontece depois do clique, e é exatamente aí que a venda se decide.</p>
           <div class="hero-actions">
             <a href="#problema" class="hero-cue">
               <span>Ver como funciona</span>
@@ -414,7 +414,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
         <div class="cost-row reveal reveal-delay-1"><span class="mark">02</span><p>Você <b>paga por anúncio</b>. Mas não sabe qual anúncio realmente vira cliente, e qual só queima verba.</p></div>
         <div class="cost-row reveal reveal-delay-2"><span class="mark">03</span><p>Você <b>muda o site no feeling</b>. Mas não sabe se aquilo ajudou ou afastou quem visita.</p></div>
         <div class="cost-row reveal reveal-delay-3"><span class="mark">04</span><p>Cada visitante que sai sem virar cliente carrega uma resposta que <b>você nunca vai ouvir</b>, porque ninguém está anotando.</p></div>
-        <div class="cost-row reveal reveal-delay-4"><span class="mark">05</span><p>Você pode estar <b>cortando a campanha certa</b> — quando o problema real sempre esteve no site.</p></div>
+        <div class="cost-row reveal reveal-delay-4"><span class="mark">05</span><p>Você pode estar <b>cortando a campanha certa</b>, quando o problema real sempre esteve no site.</p></div>
       </div>
       <p class="cost-final reveal">Não é falta de visitantes. É falta de visibilidade.</p>
     </div>
@@ -460,7 +460,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
     <div class="how-list">
       <div class="how-step reveal">
         <div class="how-num">01</div>
-        <div class="how-body"><h3>Instalamos uma camada de inteligência no seu site</h3><p>Leva minutos e nada muda visualmente. Seu site continua exatamente como é.</p></div>
+        <div class="how-body"><h3>Instalamos uma camada de inteligência no seu site</h3><p>Nada muda visualmente. Seu site continua exatamente como é.</p></div>
       </div>
       <div class="how-step reveal reveal-delay-1">
         <div class="how-num">02</div>
@@ -477,16 +477,16 @@ footer{padding:3rem 0;background:var(--void-bg);}
     </div>
   </section>
 
-  <!-- ============ EXTRA — IA analisando os dados ============ -->
+  <!-- ============ EXTRA: IA analisando os dados ============ -->
   <section class="extra-band">
     <div class="wrap-narrow center">
       <span class="extra-badge">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
         Inteligência Artificial
       </span>
-      <span class="extra-note">Opcional · custo maior</span>
+      <span class="extra-note">Opcional</span>
       <h2 class="reveal in">Quer ir além? A Inteligência Artificial analisa tudo isso por você.</h2>
-      <p class="section-lede reveal in" style="margin-left:auto;margin-right:auto;">Para quem quiser um nível a mais de profundidade, uma IA analisa seus dados todos os dias e aponta, em linguagem simples, o que vale a pena melhorar primeiro. É um serviço opcional, à parte do pacote padrão e com custo adicional — disponível mediante consulta.</p>
+      <p class="section-lede reveal in" style="margin-left:auto;margin-right:auto;">Para quem quiser um nível a mais de profundidade, uma IA analisa seus dados todos os dias e aponta, em linguagem simples, o que vale a pena melhorar primeiro. É um serviço opcional, à parte do pacote padrão, disponível mediante consulta.</p>
     </div>
   </section>
 
@@ -872,7 +872,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
     if (dashSection) dashIo.observe(dashSection);
   }
 
-  /* -------- canvas: hero — visitantes se dividindo em dois caminhos -------- */
+  /* -------- canvas: hero, visitantes se dividindo em dois caminhos -------- */
   var heroCanvas = document.getElementById("heroCanvas");
   if (heroCanvas && heroCanvas.getContext) {
     var ctx = heroCanvas.getContext("2d");
