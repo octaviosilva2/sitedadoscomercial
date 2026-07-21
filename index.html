@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Inteligência Comercial para Sites | Escale IA</title>
-<meta name="description" content="Transforme seu site em uma ferramenta de decisão para marketing e vendas.">
+<title>Inteligência Comercial para Sites</title>
+<meta name="description" content="Descubra o que acontece no seu site depois do clique. Decisões de marketing baseadas em dados reais, não em achismo.">
+<meta name="color-scheme" content="light">
 <link rel="preload" href="fonts/Geist-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Geist-600.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -48,37 +49,6 @@
   --void-line:rgba(255,255,255,.12);
   --void-gold:#DDBA6C;
   --void-gold-bright:#EAC97E;
-}
-:root[data-theme="dark"]{
-  --bg:#0A0A0B;
-  --bg-subtle:#100F11;
-  --bg-deep:#17161A;
-  --ink:#F3F1EC;
-  --ink-muted:#A6A39B;
-  --ink-faint:#6C6A64;
-  --line:#26242A;
-  --line-strong:#332F35;
-  --gold:#DDBA6C;
-  --gold-deep:#F0CD87;
-  --gold-bright:#E9C77E;
-  --gold-soft:#241E10;
-  --gold-line:rgba(221,186,108,.3);
-  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
-  --shadow-md:0 16px 40px -20px rgba(0,0,0,.6);
-  --shadow-lg:0 30px 70px -24px rgba(0,0,0,.7);
-  --surface:#141317;
-  --good:#5FB985;
-  --bad:#D97A63;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#0A0A0B; --bg-subtle:#100F11; --bg-deep:#17161A;
-    --ink:#F3F1EC; --ink-muted:#A6A39B; --ink-faint:#6C6A64;
-    --line:#26242A; --line-strong:#332F35;
-    --gold:#DDBA6C; --gold-deep:#F0CD87; --gold-bright:#E9C77E; --gold-soft:#241E10; --gold-line:rgba(221,186,108,.3);
-    --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow-md:0 16px 40px -20px rgba(0,0,0,.6); --shadow-lg:0 30px 70px -24px rgba(0,0,0,.7);
-    --surface:#141317; --good:#5FB985; --bad:#D97A63;
-  }
 }
 
 /* ===================== BASE ===================== */
@@ -227,6 +197,7 @@ p{margin:0;}
 .extra-band{background:linear-gradient(180deg, var(--gold-soft), var(--bg) 70%);border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line);padding:clamp(3.5rem,7vw,5.5rem) 0;}
 .extra-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:100px;background:var(--void-bg);color:var(--void-gold-bright);font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
 .extra-badge svg{flex-shrink:0;}
+.extra-note{display:block;margin-top:.65rem;font-size:.78rem;font-weight:500;letter-spacing:.04em;color:var(--ink-faint);text-transform:uppercase;}
 .extra-band h2{margin-top:1.1rem;font-size:clamp(1.6rem,3.2vw,2.3rem);}
 .extra-band p{margin:1rem auto 0;}
 
@@ -369,7 +340,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
 <body>
 
 <nav class="nav" id="siteNav">
-  <a href="#top" class="nav-brand"><span class="dot"></span>Escale IA</a>
+  <a href="#top" class="nav-brand"><span class="dot"></span>Inteligência Comercial</a>
   <a href="#contato" class="nav-cta">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.53 2 12.04 2zm0 18.2c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.37c0-4.53 3.69-8.22 8.22-8.22 4.53 0 8.22 3.69 8.22 8.22s-3.7 8.24-8.14 8.24zm4.5-6.13c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.65.81-.79.97-.15.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.22-1.46-1.37-1.7-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
     <span class="txt">Falar no WhatsApp</span>
@@ -384,8 +355,8 @@ footer{padding:3rem 0;background:var(--void-bg);}
       <div class="hero-grid">
         <div class="hero-copy reveal in">
           <span class="eyebrow">Inteligência Comercial para Sites</span>
-          <h1 style="margin-top:1.1rem;">Você sabe exatamente por que algumas pessoas viram clientes, e outras simplesmente <em>vão embora</em> do seu site?</h1>
-          <p class="hero-sub">A maioria dos empresários não sabe. E essa resposta, hoje, está custando dinheiro.</p>
+          <h1 style="margin-top:1.1rem;">Você investe em marketing. Mas sabe o que realmente faz alguém <em>virar cliente</em> — ou ir embora — dentro do seu site?</h1>
+          <p class="hero-sub">Anúncio, SEO e um site bonito trazem visita. A maioria das empresas não mede o que acontece depois do clique — e é exatamente aí que a venda se decide.</p>
           <div class="hero-actions">
             <a href="#problema" class="hero-cue">
               <span>Ver como funciona</span>
@@ -406,8 +377,8 @@ footer{padding:3rem 0;background:var(--void-bg);}
     <div class="wrap">
       <div class="reveal in">
         <span class="eyebrow">O ponto cego</span>
-        <h2 style="margin-top:1rem;font-size:clamp(1.7rem,3.6vw,2.6rem);">Seu site recebe visitas todos os dias. Mas ele não conta a história.</h2>
-        <p class="section-lede">Quase toda empresa tem site. Quase toda empresa investe em marketing. E, ainda assim, quase nenhuma consegue responder ao básico:</p>
+        <h2 style="margin-top:1rem;font-size:clamp(1.7rem,3.6vw,2.6rem);">Você investe para trazer visitas. Mas ninguém investe para entender o que elas fazem depois de entrar.</h2>
+        <p class="section-lede">Quase toda empresa paga por anúncio, investe em SEO e tem um site bonito. E, ainda assim, quase nenhuma consegue responder ao básico:</p>
       </div>
       <div class="q-grid">
         <div class="q-card reveal">
@@ -416,7 +387,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
         </div>
         <div class="q-card reveal reveal-delay-1">
           <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14V8a2 2 0 0 1 2-2h4l7-3.2v14.4L10 14H6a2 2 0 0 1-2-2z"/><path d="M15 8.5a3 3 0 0 1 0 5"/></svg>
-          <p>Qual campanha realmente trouxe esse cliente?</p>
+          <p>O que faz alguém continuar no site, e não fechar a aba?</p>
         </div>
         <div class="q-card reveal reveal-delay-2">
           <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h6"/><circle cx="19" cy="18" r="2.4"/></svg>
@@ -427,7 +398,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
           <p>Qual página faz alguém querer comprar?</p>
         </div>
       </div>
-      <p class="section-close reveal">Sem essas respostas, cada decisão de marketing é um palpite. E palpite, quando envolve dinheiro de verdade, sai caro.</p>
+      <p class="section-close reveal">Sem essas respostas, cada decisão sobre marketing e sobre o site é um palpite. E palpite, quando envolve dinheiro de verdade, sai caro.</p>
     </div>
   </section>
 
@@ -443,6 +414,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
         <div class="cost-row reveal reveal-delay-1"><span class="mark">02</span><p>Você <b>paga por anúncio</b>. Mas não sabe qual anúncio realmente vira cliente, e qual só queima verba.</p></div>
         <div class="cost-row reveal reveal-delay-2"><span class="mark">03</span><p>Você <b>muda o site no feeling</b>. Mas não sabe se aquilo ajudou ou afastou quem visita.</p></div>
         <div class="cost-row reveal reveal-delay-3"><span class="mark">04</span><p>Cada visitante que sai sem virar cliente carrega uma resposta que <b>você nunca vai ouvir</b>, porque ninguém está anotando.</p></div>
+        <div class="cost-row reveal reveal-delay-4"><span class="mark">05</span><p>Você pode estar <b>cortando a campanha certa</b> — quando o problema real sempre esteve no site.</p></div>
       </div>
       <p class="cost-final reveal">Não é falta de visitantes. É falta de visibilidade.</p>
     </div>
@@ -462,7 +434,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
         </div>
         <div class="vision-card reveal reveal-delay-1">
           <span class="num">Imagine saber:</span>
-          <p>qual campanha vale a pena continuar e qual está queimando dinheiro.</p>
+          <p>se o problema está na campanha, ou no seu site.</p>
         </div>
         <div class="vision-card reveal reveal-delay-2">
           <span class="num">Imagine ver:</span>
@@ -510,10 +482,11 @@ footer{padding:3rem 0;background:var(--void-bg);}
     <div class="wrap-narrow center">
       <span class="extra-badge">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
-        Extra opcional
+        Inteligência Artificial
       </span>
-      <h2 class="reveal in">Isso também não é só para olhar.</h2>
-      <p class="section-lede reveal in" style="margin-left:auto;margin-right:auto;">Para quem tiver interesse, uma inteligência artificial pode analisar seus dados todos os dias e apontar, em linguagem simples, o que vale a pena melhorar primeiro. Não faz parte do pacote padrão — disponível mediante consulta.</p>
+      <span class="extra-note">Opcional · custo maior</span>
+      <h2 class="reveal in">Quer ir além? A Inteligência Artificial analisa tudo isso por você.</h2>
+      <p class="section-lede reveal in" style="margin-left:auto;margin-right:auto;">Para quem quiser um nível a mais de profundidade, uma IA analisa seus dados todos os dias e aponta, em linguagem simples, o que vale a pena melhorar primeiro. É um serviço opcional, à parte do pacote padrão e com custo adicional — disponível mediante consulta.</p>
     </div>
   </section>
 
@@ -749,7 +722,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
           </div>
         </div>
       </div>
-      <p class="dash-caption reveal center">E muitos outros dados, para você decidir com mais certeza e converter mais.</p>
+      <p class="dash-caption reveal center">E muitos outros dados, para você enxergar se o problema é a campanha, o site, ou os dois.</p>
     </div>
   </section>
 
@@ -785,7 +758,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
   <!-- ============ 9. CTA FINAL ============ -->
   <section class="section final-cta" id="contato">
     <div class="wrap-narrow">
-      <span class="eyebrow">Escale IA</span>
+      <span class="eyebrow">Chegou a hora</span>
       <h2 style="margin-top:1.1rem;">Seu site pode fazer muito mais do que apenas existir.</h2>
       <div class="final-lines reveal">
         <span>Transforme visitantes em informação.</span>
@@ -794,7 +767,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
       </div>
       <a href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Quero%20entender%20como%20funciona%20a%20Intelig%C3%AAncia%20Comercial%20para%20Sites." class="btn btn-primary" style="font-size:1.05rem;padding:1.1rem 2.4rem;">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.53 2 12.04 2zm0 18.2c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.37c0-4.53 3.69-8.22 8.22-8.22 4.53 0 8.22 3.69 8.22 8.22s-3.7 8.24-8.14 8.24zm4.5-6.13c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.65.81-.79.97-.15.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.22-1.46-1.37-1.7-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
-        Falar com a Escale IA no WhatsApp
+        Falar no WhatsApp
       </a>
     </div>
   </section>
@@ -804,8 +777,8 @@ footer{padding:3rem 0;background:var(--void-bg);}
 <footer>
   <div class="wrap">
     <div class="footer-row">
-      <span class="footer-brand"><span class="dot"></span>Escale IA</span>
-      <span>Inteligência Comercial para Sites. Transformando visitas em decisões.</span>
+      <span class="footer-brand"><span class="dot"></span>Inteligência Comercial</span>
+      <span>Decisões de marketing com dados reais, não com achismo.</span>
     </div>
   </div>
 </footer>
