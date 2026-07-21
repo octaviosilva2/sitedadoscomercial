@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demonstração fictícia da solução Inteligência Comercial para Sites.">
+  <title>Inteligência Comercial — Demonstração</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --surface-2: #fafafa;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --subtle: #a1a1a6;
+      --line: rgba(29, 29, 31, .09);
+      --line-strong: rgba(29, 29, 31, .15);
+      --accent: #0a66e8;
+      --accent-soft: rgba(10, 102, 232, .09);
+      --positive: #16845b;
+      --warning: #ad6500;
+      --danger: #c2413a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .02), 0 12px 40px rgba(0, 0, 0, .035);
+      --radius: 20px;
+      --sidebar: 252px;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0d0d0f;
+      --surface: #171719;
+      --surface-2: #1d1d20;
+      --text: #f5f5f7;
+      --muted: #a1a1a6;
+      --subtle: #737378;
+      --line: rgba(255, 255, 255, .08);
+      --line-strong: rgba(255, 255, 255, .14);
+      --accent: #4595ff;
+      --accent-soft: rgba(69, 149, 255, .13);
+      --positive: #43b58b;
+      --warning: #e1a14c;
+      --danger: #ee756d;
+      --shadow: 0 12px 48px rgba(0, 0, 0, .18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.45;
+      letter-spacing: -.01em;
+      transition: background .25s ease, color .25s ease;
+    }
+    button, select { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+    svg { display: block; }
+    .app { min-height: 100vh; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 20;
+      width: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 18px 20px;
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(20px);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 27px; }
+    .brand-mark {
+      width: 33px; height: 33px; display: grid; place-items: center;
+      border-radius: 10px; background: var(--text); color: var(--surface);
+    }
+    .brand-copy strong { display: block; font-size: 14px; letter-spacing: -.02em; }
+    .brand-copy span { display: block; margin-top: 1px; color: var(--muted); font-size: 11px; }
+    .nav-label { padding: 0 12px 8px; color: var(--subtle); font-size: 10px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+    .nav { display: grid; gap: 3px; }
+    .nav-button {
+      width: 100%; display: flex; align-items: center; gap: 11px;
+      padding: 10px 12px; border: 0; border-radius: 11px;
+      background: transparent; color: var(--muted); text-align: left; cursor: pointer;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+    .nav-button:hover { background: var(--surface-2); color: var(--text); }
+    .nav-button:active { transform: scale(.985); }
+    .nav-button.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+    .nav-button svg { width: 17px; height: 17px; flex: 0 0 auto; }
+    .sidebar-bottom { margin-top: auto; padding: 16px 10px 0; }
+    .demo-stamp {
+      padding: 13px 14px; border: 1px solid var(--line); border-radius: 13px;
+      background: var(--surface-2); color: var(--muted); font-size: 11px; line-height: 1.45;
+    }
+    .demo-stamp strong { display: block; margin-bottom: 3px; color: var(--text); font-size: 11px; }
+
+    .main { min-height: 100vh; margin-left: var(--sidebar); }
+    .topbar {
+      position: sticky; top: 0; z-index: 15;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 74px; padding: 0 42px;
+      background: color-mix(in srgb, var(--bg) 84%, transparent);
+      border-bottom: 1px solid transparent; backdrop-filter: blur(22px);
+    }
+    .topbar.scrolled { border-bottom-color: var(--line); }
+    .mobile-brand { display: none; font-weight: 650; }
+    .breadcrumb { color: var(--muted); font-size: 13px; }
+    .breadcrumb strong { color: var(--text); font-weight: 600; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .period-select, .icon-button {
+      min-height: 36px; border: 1px solid var(--line); border-radius: 10px;
+      background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.02);
+    }
+    .period-select { padding: 0 30px 0 12px; cursor: pointer; }
+    .icon-button { width: 36px; display: grid; place-items: center; padding: 0; cursor: pointer; }
+    .icon-button svg { width: 16px; height: 16px; }
+    .menu-button { display: none; }
+
+    .content { width: min(1440px, 100%); margin: 0 auto; padding: 30px 42px 56px; }
+    .view { display: none; animation: rise .35s ease both; }
+    .view.active { display: block; }
+    @keyframes rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .085em; text-transform: uppercase; }
+    .page-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
+    .page-heading h1 { margin: 0; font-size: clamp(30px, 4vw, 46px); font-weight: 620; letter-spacing: -.047em; line-height: 1.04; }
+    .page-heading p { max-width: 560px; margin: 9px 0 0; color: var(--muted); font-size: 15px; font-weight: 350; }
+    .updated { flex: 0 0 auto; color: var(--subtle); font-size: 11px; }
+
+    .grid { display: grid; gap: 16px; }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .span-2 { grid-column: span 2; }
+    .card {
+      position: relative; min-width: 0; padding: 24px;
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .card-header { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+    .card-title { margin: 0; font-size: 14px; font-weight: 620; letter-spacing: -.018em; }
+    .card-note { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .tag::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .tag.demo { background: var(--accent-soft); color: var(--accent); }
+    .kpi { min-height: 154px; display: flex; flex-direction: column; justify-content: space-between; }
+    .kpi-label { color: var(--muted); font-size: 12px; }
+    .kpi-value { margin: 10px 0 7px; font-size: clamp(30px, 3vw, 43px); font-weight: 520; line-height: 1; letter-spacing: -.052em; }
+    .kpi-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--subtle); font-size: 11px; }
+    .delta { color: var(--positive); font-weight: 600; }
+    .delta.down { color: var(--danger); }
+    .spark { width: 72px; height: 25px; }
+    .spark path { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .chart-wrap { height: 272px; }
+    .line-chart { width: 100%; height: 100%; overflow: visible; }
+    .line-chart .axis { stroke: var(--line); stroke-width: 1; }
+    .line-chart .series { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+    .line-chart .area { fill: url(#areaGradient); }
+    .line-chart .dot { fill: var(--surface); stroke: var(--accent); stroke-width: 2; opacity: 0; transition: opacity .15s; }
+    .line-chart .hit { fill: transparent; cursor: crosshair; }
+    .line-chart .hit:hover + .dot { opacity: 1; }
+    .axis-labels { display: flex; justify-content: space-between; margin-top: -5px; color: var(--subtle); font-size: 10px; }
+    .chart-legend { display: flex; gap: 18px; margin-top: 13px; color: var(--muted); font-size: 11px; }
+    .legend-item { display: flex; align-items: center; gap: 7px; }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+    .donut-layout { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 22px; min-height: 230px; }
+    .donut { position: relative; width: 144px; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--accent) 0 42%, #7baeea 42% 68%, #b8c6d8 68% 84%, var(--line-strong) 84%); }
+    .donut::after { content: ""; position: absolute; inset: 29px; border-radius: 50%; background: var(--surface); }
+    .donut-center { position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; text-align: center; }
+    .donut-center strong { font-size: 25px; font-weight: 550; letter-spacing: -.04em; }
+    .donut-center span { color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }
+    .legend-list { display: grid; gap: 13px; }
+    .legend-row { display: grid; grid-template-columns: 8px 1fr auto; gap: 9px; align-items: center; font-size: 12px; }
+    .legend-row i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
+    .legend-row span { color: var(--muted); }
+    .legend-row strong { font-weight: 610; }
+
+    .signal-card { background: var(--text); color: var(--surface); border-color: transparent; }
+    html[data-theme="dark"] .signal-card { background: #f1f1f3; color: #18181a; }
+    .signal-card .card-note { color: color-mix(in srgb, currentColor 62%, transparent); }
+    .signal-index { display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 34px; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); border-radius: 50%; font-size: 11px; }
+    .signal-card h3 { max-width: 370px; margin: 0 0 14px; font-size: 23px; font-weight: 480; line-height: 1.22; letter-spacing: -.035em; }
+    .signal-card p { max-width: 430px; margin: 0; color: color-mix(in srgb, currentColor 65%, transparent); font-size: 13px; line-height: 1.58; }
+    .signal-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 28px; border: 0; background: transparent; color: inherit; font-size: 12px; cursor: pointer; padding: 0; }
+
+    .section-gap { margin-top: 16px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .strip-item { padding: 9px 22px 7px; border-right: 1px solid var(--line); }
+    .strip-item:first-child { padding-left: 0; }
+    .strip-item:last-child { border-right: 0; }
+    .strip-item span { display: block; color: var(--muted); font-size: 11px; }
+    .strip-item strong { display: block; margin-top: 8px; font-size: 25px; font-weight: 520; letter-spacing: -.035em; }
+
+    .bars { display: grid; gap: 18px; }
+    .bar-row { display: grid; grid-template-columns: minmax(120px, 1.2fr) 3fr 56px; align-items: center; gap: 14px; font-size: 12px; }
+    .bar-name { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { height: 7px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; width: var(--w); border-radius: inherit; background: var(--accent); transform-origin: left; animation: grow .8s ease both; }
+    @keyframes grow { from { transform: scaleX(0); } }
+    .bar-value { text-align: right; font-weight: 600; }
+    .bar-row.highlight .bar-name, .bar-row.highlight .bar-value { color: var(--accent); font-weight: 650; }
+
+    .table-wrap { overflow-x: auto; margin: 0 -4px; }
+    table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+    th { padding: 0 12px 11px; color: var(--subtle); font-size: 10px; font-weight: 650; letter-spacing: .06em; text-align: right; text-transform: uppercase; }
+    th:first-child, td:first-child { text-align: left; }
+    td { padding: 14px 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; text-align: right; }
+    td:first-child { color: var(--text); font-weight: 550; }
+    tr.focus td { background: var(--accent-soft); }
+    tr.focus td:first-child { color: var(--accent); }
+    .tiny-status { display: inline-flex; padding: 4px 7px; border-radius: 6px; background: var(--surface-2); color: var(--muted); font-size: 9px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+    .tiny-status.attention { background: rgba(194,65,58,.09); color: var(--danger); }
+    .tiny-status.good { background: rgba(22,132,91,.09); color: var(--positive); }
+
+    .hour-chart { display: flex; align-items: end; gap: 6px; height: 170px; padding-top: 16px; }
+    .hour-bar { position: relative; flex: 1; height: var(--h); min-width: 3px; border-radius: 4px 4px 1px 1px; background: color-mix(in srgb, var(--accent) 28%, var(--surface)); transition: background .2s, transform .2s; }
+    .hour-bar:hover, .hour-bar.peak { background: var(--accent); transform: translateY(-2px); }
+    .hour-labels { display: flex; justify-content: space-between; margin-top: 10px; color: var(--subtle); font-size: 10px; }
+
+    .device-list { display: grid; gap: 18px; }
+    .device-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .device-row .name { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .device-row .value { font-size: 12px; font-weight: 650; }
+    .device-row .track { grid-column: 1 / -1; height: 5px; border-radius: 99px; background: var(--surface-2); }
+    .device-row .fill { width: var(--w); height: 100%; border-radius: inherit; background: var(--accent); opacity: var(--o, 1); }
+
+    .map-demo { position: relative; min-height: 310px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 15px; overflow: hidden; }
+    .map-browser { display: flex; gap: 5px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+    .map-browser i { width: 5px; height: 5px; background: var(--line-strong); border-radius: 50%; }
+    .wire-page { width: 82%; height: 226px; margin: 18px auto; padding: 15px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+    .wire-nav { width: 100%; height: 11px; border-radius: 3px; background: var(--line); }
+    .wire-hero { width: 100%; height: 76px; margin-top: 10px; border-radius: 5px; background: var(--surface-2); }
+    .wire-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-top: 9px; }
+    .wire-row i { height: 48px; border-radius: 4px; background: var(--surface-2); }
+    .heat { position: absolute; width: var(--s); height: var(--s); left: var(--x); top: var(--y); border-radius: 50%; background: radial-gradient(circle, rgba(10,102,232,.55), rgba(10,102,232,.08) 58%, transparent 72%); transform: translate(-50%, -50%); }
+    .heat.orange { background: radial-gradient(circle, rgba(225,135,30,.60), rgba(225,135,30,.08) 58%, transparent 72%); }
+    .map-caption { position: absolute; left: 10px; bottom: 10px; padding: 5px 8px; background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 7px; color: var(--muted); font-size: 9px; backdrop-filter: blur(8px); }
+
+    .scroll-map { height: 310px; border-radius: 15px; background: linear-gradient(to bottom, rgba(10,102,232,.42), rgba(10,102,232,.17) 42%, rgba(225,135,30,.10) 72%, rgba(194,65,58,.04)); border: 1px solid var(--line); position: relative; overflow: hidden; }
+    .scroll-map::after { content: ""; position: absolute; left: 20%; right: 20%; top: 20px; bottom: 20px; border: 1px solid rgba(255,255,255,.45); border-radius: 7px; background: rgba(255,255,255,.12); }
+    .depth-label { position: absolute; right: 12px; color: var(--muted); font-size: 9px; }
+
+    .funnel { display: grid; gap: 10px; }
+    .funnel-row { display: grid; grid-template-columns: 148px 1fr 72px; align-items: center; gap: 14px; }
+    .funnel-label strong { display: block; font-size: 12px; font-weight: 600; }
+    .funnel-label span { color: var(--subtle); font-size: 10px; }
+    .funnel-track { height: 46px; background: var(--surface-2); border-radius: 9px; overflow: hidden; }
+    .funnel-fill { display: flex; align-items: center; width: var(--w); height: 100%; min-width: 46px; padding-left: 12px; background: color-mix(in srgb, var(--accent) var(--opacity), var(--surface)); border-radius: inherit; color: var(--text); font-size: 11px; font-weight: 650; }
+    .funnel-rate { color: var(--muted); font-size: 11px; text-align: right; }
+
+    .journey { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding: 8px 0 4px; }
+    .journey-step { flex: 0 0 132px; min-height: 80px; display: grid; place-content: center; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); text-align: center; }
+    .journey-step strong { font-size: 11px; font-weight: 610; }
+    .journey-step span { margin-top: 4px; color: var(--muted); font-size: 9px; }
+    .journey-arrow { color: var(--subtle); font-size: 14px; }
+
+    .insight-list { display: grid; gap: 14px; }
+    .insight {
+      display: grid; grid-template-columns: 34px 1fr; gap: 14px;
+      padding: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .insight-number { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 700; }
+    .insight h3 { margin: 2px 0 15px; font-size: 18px; font-weight: 590; letter-spacing: -.025em; }
+    .reading-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .reading-part { border-left: 1px solid var(--line); padding-left: 14px; }
+    .reading-part:first-child { border-left: 0; padding-left: 0; }
+    .reading-part strong { display: block; margin-bottom: 5px; color: var(--subtle); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; }
+    .reading-part p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+    .context-card { padding: 30px; }
+    .company-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 34px; }
+    .company-name { font-size: 27px; font-weight: 560; letter-spacing: -.04em; }
+    .company-meta { margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .service-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .service-chip { padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 11px; }
+
+    .footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--subtle); font-size: 10px; }
+    .footer strong { color: var(--muted); font-weight: 600; }
+    .tooltip { position: fixed; z-index: 99; pointer-events: none; opacity: 0; transform: translateY(4px); padding: 7px 9px; background: var(--text); color: var(--surface); border-radius: 7px; font-size: 10px; box-shadow: var(--shadow); transition: opacity .12s, transform .12s; }
+    .tooltip.show { opacity: 1; transform: none; }
+
+    @media (max-width: 1120px) {
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 > :last-child { grid-column: span 2; }
+      .metric-strip { grid-template-columns: repeat(2, 1fr); row-gap: 22px; }
+      .strip-item:nth-child(2) { border-right: 0; }
+      .donut-layout { grid-template-columns: 130px 1fr; }
+      .donut { width: 125px; }
+    }
+    @media (max-width: 820px) {
+      :root { --sidebar: 0px; }
+      .sidebar { width: min(290px, 86vw); transform: translateX(-102%); transition: transform .25s ease; box-shadow: 20px 0 60px rgba(0,0,0,.18); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .topbar { height: 64px; padding: 0 20px; }
+      .mobile-brand { display: block; }
+      .breadcrumb { display: none; }
+      .menu-button { display: grid; }
+      .content { padding: 24px 20px 40px; }
+      .page-heading { align-items: start; }
+      .updated { display: none; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 > *, .grid-3 > *, .span-2, .grid-3 > :last-child { grid-column: auto; }
+      .reading-grid { grid-template-columns: 1fr; gap: 13px; }
+      .reading-part, .reading-part:first-child { border-left: 1px solid var(--line); padding-left: 14px; }
+      .company-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .top-actions .period-select { width: 112px; }
+      .grid-4 { grid-template-columns: 1fr; }
+      .page-heading h1 { font-size: 34px; }
+      .card { padding: 20px; }
+      .metric-strip { grid-template-columns: 1fr 1fr; }
+      .strip-item { padding-left: 0; }
+      .donut-layout { grid-template-columns: 1fr; justify-items: center; }
+      .legend-list { width: 100%; }
+      .funnel-row { grid-template-columns: 92px 1fr; }
+      .funnel-rate { display: none; }
+      .bar-row { grid-template-columns: 100px 1fr 42px; gap: 8px; }
+      .footer { align-items: start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M5 16V9m7 7V5m7 11v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".7"/></svg>
+        </div>
+        <div class="brand-copy"><strong>Inteligência Comercial</strong><span>Painel demonstrativo</span></div>
+      </div>
+      <div class="nav-label">Análises</div>
+      <nav class="nav">
+        <button class="nav-button active" data-view="executiva"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" stroke="currentColor"/><rect x="14" y="3" width="7" height="7" rx="2" stroke="currentColor"/><rect x="3" y="14" width="7" height="7" rx="2" stroke="currentColor"/><rect x="14" y="14" width="7" height="7" rx="2" stroke="currentColor"/></svg>Visão executiva</button>
+        <button class="nav-button" data-view="visibilidade"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor"/><path d="m16 16 5 5" stroke="currentColor" stroke-linecap="round"/></svg>Visibilidade</button>
+        <button class="nav-button" data-view="interesse"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-linecap="round"/></svg>Interesse</button>
+        <button class="nav-button" data-view="comportamento"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.4 7-11a7 7 0 1 0-14 0c0 6.6 7 11 7 11Z" stroke="currentColor"/><circle cx="12" cy="10" r="2.5" stroke="currentColor"/></svg>Comportamento</button>
+        <button class="nav-button" data-view="acoes"><svg viewBox="0 0 24 24" fill="none"><path d="M8 11V6a2 2 0 1 1 4 0v4-2a2 2 0 1 1 4 0v3-1a2 2 0 1 1 4 0v5c0 4-3 6-7 6h-1c-3 0-5-2-7-5l-2-3a2 2 0 0 1 3-2l2 2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Ações comerciais</button>
+        <button class="nav-button" data-view="marketing"><svg viewBox="0 0 24 24" fill="none"><path d="M4 14V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-4 5v-5H6a2 2 0 0 1-2-2Z" stroke="currentColor"/></svg>Marketing</button>
+        <button class="nav-button" data-view="funil"><svg viewBox="0 0 24 24" fill="none"><path d="M3 5h18L14 13v5l-4 2v-7L3 5Z" stroke="currentColor" stroke-linejoin="round"/></svg>Funil</button>
+        <button class="nav-button" data-view="leituras"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a7 7 0 0 0-4 12.7V20h8v-4.3A7 7 0 0 0 12 3Z" stroke="currentColor"/><path d="M9 20h6M9.5 16h5" stroke="currentColor" stroke-linecap="round"/></svg>Leituras possíveis</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="demo-stamp"><strong>Ambiente demonstrativo</strong>Dados demonstrativos e fictícios.<br>Nenhum dado pessoal ou real.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar" id="topbar">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Abrir menu"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round"/></svg></button>
+        <div class="mobile-brand">Áurea</div>
+        <div class="breadcrumb">Áurea Estratégia <span aria-hidden="true">/</span> <strong id="currentView">Visão executiva</strong></div>
+        <div class="top-actions">
+          <select class="period-select" id="periodSelect" aria-label="Selecionar período">
+            <option value="7">Últimos 7 dias</option>
+            <option value="30" selected>Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
+          </select>
+          <button class="icon-button" id="themeButton" aria-label="Alternar tema">
+            <svg class="theme-icon" viewBox="0 0 24 24" fill="none"><path d="M20 15.4A8 8 0 0 1 8.6 4a8 8 0 1 0 11.4 11.4Z" stroke="currentColor" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="view active" id="view-executiva">
+          <div class="page-heading">
+            <div><p class="eyebrow">Visão executiva</p><h1>O site em uma leitura.</h1><p>Os sinais mais importantes para decidir onde concentrar atenção comercial.</p></div>
+            <span class="updated">Base sintética · atualizada em 21 jul. 2026</span>
+          </div>
+          <div class="grid grid-4">
+            <article class="card kpi"><div><div class="kpi-label">Visitantes</div><div class="kpi-value" data-kpi="visitors">18.420</div></div><div class="kpi-bottom"><span><b class="delta">+12,4%</b> vs. período anterior</span><svg class="spark" viewBox="0 0 72 25"><path d="M2 19 12 17 22 19 32 12 42 14 52 7 61 9 70 3"/></svg></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Ações importantes</div><div class="kpi-value" data-kpi="actions">812</div></div><div class="kpi-bottom"><span><b class="delta">+8,1%</b> · <span data-kpi="actionRate">4,4%</span> dos visitantes</span><svg class="spark" viewBox="0 0 72 25"><path d="M2 20 12 16 22 17 32 13 42 14 52 10 61 5 70 7"/></svg></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Visitantes recorrentes</div><div class="kpi-value" data-kpi="returning">4.862</div></div><div class="kpi-bottom"><span><b class="delta">+16,7%</b> · 26,4% da base</span><svg class="spark" viewBox="0 0 72 25"><path d="M2 21 12 18 22 19 32 16 42 10 52 12 61 6 70 4"/></svg></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Tempo médio de atenção</div><div class="kpi-value" data-kpi="attention">3m 42s</div></div><div class="kpi-bottom"><span><b class="delta">+21s</b> por sessão</span><svg class="spark" viewBox="0 0 72 25"><path d="M2 18 12 20 22 15 32 16 42 9 52 10 61 6 70 5"/></svg></div></article>
+          </div>
+
+          <div class="grid grid-3 section-gap">
+            <article class="card span-2">
+              <div class="card-header"><div><h2 class="card-title">Visitas ao longo do período</h2><p class="card-note">Sessões diárias · todos os canais</p></div><span class="tag">30 dias</span></div>
+              <div class="chart-wrap">
+                <svg class="line-chart" viewBox="0 0 760 250" preserveAspectRatio="none" role="img" aria-label="Tendência crescente de visitas">
+                  <defs><linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".16"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+                  <path class="axis" d="M0 220H760M0 148H760M0 76H760"/>
+                  <path class="area" d="M0 193 L25 181 L50 187 L76 169 L101 177 L126 152 L152 159 L177 143 L202 149 L228 122 L253 132 L278 119 L304 127 L329 92 L354 106 L380 88 L405 97 L430 75 L456 84 L481 62 L506 73 L532 45 L557 58 L582 49 L608 68 L633 43 L658 52 L684 31 L709 46 L735 27 L760 35 L760 230 L0 230 Z"/>
+                  <polyline class="series" points="0,193 25,181 50,187 76,169 101,177 126,152 152,159 177,143 202,149 228,122 253,132 278,119 304,127 329,92 354,106 380,88 405,97 430,75 456,84 481,62 506,73 532,45 557,58 582,49 608,68 633,43 658,52 684,31 709,46 735,27 760,35"/>
+                  <rect class="hit" x="670" y="0" width="70" height="250" data-tip="20 jul. · 824 visitas"/><circle class="dot" cx="709" cy="46" r="5"/>
+                  <rect class="hit" x="720" y="0" width="40" height="250" data-tip="21 jul. · 861 visitas"/><circle class="dot" cx="760" cy="35" r="5"/>
+                </svg>
+              </div>
+              <div class="axis-labels"><span>22 jun.</span><span>29 jun.</span><span>6 jul.</span><span>13 jul.</span><span>21 jul.</span></div>
+              <div class="chart-legend"><span class="legend-item"><i class="legend-dot"></i> Visitas</span><span>Maior volume: segundas, 10h–12h</span></div>
+            </article>
+            <article class="card">
+              <div class="card-header"><div><h2 class="card-title">Origem das visitas</h2><p class="card-note">Participação por canal</p></div></div>
+              <div class="donut-layout">
+                <div class="donut"><div class="donut-center"><strong>18,4k</strong><span>visitas</span></div></div>
+                <div class="legend-list">
+                  <div class="legend-row" style="--c:var(--accent)"><i></i><span>Google orgânico</span><strong>42%</strong></div>
+                  <div class="legend-row" style="--c:#7baeea"><i></i><span>Google Ads</span><strong>26%</strong></div>
+                  <div class="legend-row" style="--c:#b8c6d8"><i></i><span>Instagram</span><strong>16%</strong></div>
+                  <div class="legend-row" style="--c:var(--line-strong)"><i></i><span>Outros</span><strong>16%</strong></div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="grid grid-2 section-gap">
+            <article class="card signal-card">
+              <div class="signal-index">01</div><p class="eyebrow" style="color:inherit;opacity:.58">Sinal prioritário</p>
+              <h3>Consultoria Express recebe menos visitas, mas gera 2,3× mais ações.</h3>
+              <p>O padrão sugere interesse qualificado em uma oferta hoje pouco visível. A causa ainda precisa ser testada.</p>
+              <button class="signal-link" data-go="leituras">Ver leitura completa <span aria-hidden="true">→</span></button>
+            </article>
+            <article class="card">
+              <div class="card-header"><div><h2 class="card-title">Resumo do período</h2><p class="card-note">Quatro sinais para acompanhamento</p></div></div>
+              <div class="metric-strip">
+                <div class="strip-item"><span>Taxa de retorno</span><strong>26,4%</strong></div>
+                <div class="strip-item"><span>Scroll até 75%</span><strong>38,1%</strong></div>
+                <div class="strip-item"><span>Downloads</span><strong>237</strong></div>
+                <div class="strip-item"><span>Vídeos concluídos</span><strong>41,8%</strong></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" id="view-visibilidade">
+          <div class="page-heading"><div><p class="eyebrow">Visibilidade</p><h1>Como encontram a empresa.</h1><p>Busca, presença orgânica e qualidade percebida nas páginas de entrada.</p></div><span class="updated">Busca integrada · dados sintéticos</span></div>
+          <div class="grid grid-4">
+            <article class="card kpi"><div><div class="kpi-label">Impressões na busca</div><div class="kpi-value">324 mil</div></div><div class="kpi-bottom"><span><b class="delta">+18,2%</b> no período</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Cliques orgânicos</div><div class="kpi-value">7.736</div></div><div class="kpi-bottom"><span>CTR de <b class="delta">2,39%</b></span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Posição média</div><div class="kpi-value">8,7</div></div><div class="kpi-bottom"><span><b class="delta">↑ 1,4</b> posições</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Velocidade percebida</div><div class="kpi-value">1,8s</div></div><div class="kpi-bottom"><span>p75 da página inicial</span></div></article>
+          </div>
+          <div class="grid grid-2 section-gap">
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Buscas que geram visitas</h2><p class="card-note">Principais termos não identificáveis</p></div><span class="tag">Orgânico</span></div><div class="bars">
+              <div class="bar-row"><span class="bar-name">consultoria empresarial</span><div class="bar-track"><div class="bar-fill" style="--w:91%"></div></div><span class="bar-value">1.284</span></div>
+              <div class="bar-row"><span class="bar-name">planejamento estratégico</span><div class="bar-track"><div class="bar-fill" style="--w:73%"></div></div><span class="bar-value">1.031</span></div>
+              <div class="bar-row"><span class="bar-name">consultoria para empresas</span><div class="bar-track"><div class="bar-fill" style="--w:54%"></div></div><span class="bar-value">764</span></div>
+              <div class="bar-row highlight"><span class="bar-name">diagnóstico comercial</span><div class="bar-track"><div class="bar-fill" style="--w:41%"></div></div><span class="bar-value">579</span></div>
+              <div class="bar-row"><span class="bar-name">gestão de processos</span><div class="bar-track"><div class="bar-fill" style="--w:35%"></div></div><span class="bar-value">496</span></div>
+            </div></article>
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Páginas de entrada</h2><p class="card-note">Visitas e continuidade da navegação</p></div></div><div class="table-wrap"><table><thead><tr><th>Página</th><th>Entradas</th><th>Continuam</th></tr></thead><tbody>
+              <tr><td>Início</td><td>5.204</td><td>48%</td></tr><tr class="focus"><td>Portfólio</td><td>2.171</td><td>72%</td></tr><tr><td>Serviços</td><td>1.938</td><td>57%</td></tr><tr><td>Artigo · Gestão</td><td>1.347</td><td>44%</td></tr><tr><td>Sobre</td><td>729</td><td>38%</td></tr>
+            </tbody></table></div></article>
+          </div>
+          <article class="card section-gap"><div class="card-header"><div><h2 class="card-title">Leitura de visibilidade</h2><p class="card-note">Uma interpretação possível, não uma conclusão causal</p></div><span class="tag demo">Sinal</span></div><div class="reading-grid"><div class="reading-part"><strong>Sinal observado</strong><p>A página de portfólio retém 72% das entradas, 24 pontos acima da página inicial.</p></div><div class="reading-part"><strong>Hipótese</strong><p>Provas concretas de trabalho podem reduzir incerteza e estimular a exploração.</p></div><div class="reading-part"><strong>Possível teste</strong><p>Adicionar um caso resumido na página inicial e medir avanço aos serviços por 30 dias.</p></div></div></article>
+        </section>
+
+        <section class="view" id="view-interesse">
+          <div class="page-heading"><div><p class="eyebrow">Interesse</p><h1>O que merece atenção.</h1><p>Serviços explorados, profundidade de leitura e sinais de retorno.</p></div><span class="updated">Interações agregadas · dados sintéticos</span></div>
+          <div class="grid grid-4">
+            <article class="card kpi"><div><div class="kpi-label">Sessões engajadas</div><div class="kpi-value">11.934</div></div><div class="kpi-bottom"><span>64,8% das sessões</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Páginas por sessão</div><div class="kpi-value">3,2</div></div><div class="kpi-bottom"><span><b class="delta">+0,4</b> vs. anterior</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Retorno em 14 dias</div><div class="kpi-value">18,6%</div></div><div class="kpi-bottom"><span>3.426 visitantes</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Detalhes abertos</div><div class="kpi-value">5.913</div></div><div class="kpi-bottom"><span><b class="delta">+14,3%</b> no período</span></div></article>
+          </div>
+          <div class="grid grid-2 section-gap">
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Serviços mais explorados</h2><p class="card-note">Aberturas de detalhes</p></div></div><div class="bars">
+              <div class="bar-row"><span class="bar-name">Planejamento estratégico</span><div class="bar-track"><div class="bar-fill" style="--w:100%"></div></div><span class="bar-value">1.842</span></div>
+              <div class="bar-row"><span class="bar-name">Gestão comercial</span><div class="bar-track"><div class="bar-fill" style="--w:82%"></div></div><span class="bar-value">1.511</span></div>
+              <div class="bar-row"><span class="bar-name">Processos e operação</span><div class="bar-track"><div class="bar-fill" style="--w:67%"></div></div><span class="bar-value">1.234</span></div>
+              <div class="bar-row"><span class="bar-name">Mentoria executiva</span><div class="bar-track"><div class="bar-fill" style="--w:49%"></div></div><span class="bar-value">902</span></div>
+              <div class="bar-row highlight"><span class="bar-name">Consultoria Express</span><div class="bar-track"><div class="bar-fill" style="--w:23%"></div></div><span class="bar-value">424</span></div>
+            </div></article>
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Eficiência por serviço</h2><p class="card-note">Ações importantes após visualizar</p></div><span class="tag demo">Oportunidade</span></div><div class="table-wrap"><table><thead><tr><th>Serviço</th><th>Taxa de ação</th><th>Tempo</th></tr></thead><tbody>
+              <tr><td>Planejamento</td><td>4,7%</td><td>3m 18s</td></tr><tr><td>Gestão comercial</td><td>5,2%</td><td>3m 41s</td></tr><tr><td>Processos</td><td>3,9%</td><td>2m 54s</td></tr><tr><td>Mentoria</td><td>6,1%</td><td>4m 07s</td></tr><tr class="focus"><td>Consultoria Express</td><td><strong style="color:var(--accent)">11,8%</strong></td><td>4m 32s</td></tr>
+            </tbody></table></div></article>
+          </div>
+          <article class="card section-gap"><div class="card-header"><div><h2 class="card-title">Profundidade de leitura</h2><p class="card-note">Percentual das sessões que alcançam cada ponto</p></div></div><div class="funnel">
+            <div class="funnel-row"><div class="funnel-label"><strong>Início</strong><span>100% da página</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:100%;--opacity:22%">14.228</div></div><div class="funnel-rate">100%</div></div>
+            <div class="funnel-row"><div class="funnel-label"><strong>Serviços</strong><span>25% da página</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:82%;--opacity:34%">11.668</div></div><div class="funnel-rate">82,0%</div></div>
+            <div class="funnel-row"><div class="funnel-label"><strong>Portfólio</strong><span>50% da página</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:61%;--opacity:48%">8.679</div></div><div class="funnel-rate">61,0%</div></div>
+            <div class="funnel-row"><div class="funnel-label"><strong>Oferta Express</strong><span>75% da página</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:38%;--opacity:70%">5.421</div></div><div class="funnel-rate">38,1%</div></div>
+            <div class="funnel-row"><div class="funnel-label"><strong>CTA final</strong><span>Fim da página</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:24%;--opacity:95%">3.415</div></div><div class="funnel-rate">24,0%</div></div>
+          </div></article>
+        </section>
+
+        <section class="view" id="view-comportamento">
+          <div class="page-heading"><div><p class="eyebrow">Comportamento</p><h1>Como navegam.</h1><p>Dispositivos, horários e representações demonstrativas de interação.</p></div><span class="updated">Sem gravações reais · exemplos visuais</span></div>
+          <div class="grid grid-3">
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Dispositivos</h2><p class="card-note">Participação nas sessões</p></div></div><div class="device-list">
+              <div class="device-row"><span class="name">Celular</span><span class="value">68%</span><div class="track"><div class="fill" style="--w:68%"></div></div></div>
+              <div class="device-row"><span class="name">Computador</span><span class="value">29%</span><div class="track"><div class="fill" style="--w:29%;--o:.62"></div></div></div>
+              <div class="device-row"><span class="name">Tablet</span><span class="value">3%</span><div class="track"><div class="fill" style="--w:3%;--o:.35"></div></div></div>
+            </div><div class="metric-strip" style="grid-template-columns:1fr 1fr;margin-top:31px"><div class="strip-item"><span>Queda · celular</span><strong style="color:var(--danger)">41%</strong></div><div class="strip-item"><span>Queda · desktop</span><strong>24%</strong></div></div></article>
+            <article class="card span-2"><div class="card-header"><div><h2 class="card-title">Horários de maior atividade</h2><p class="card-note">Sessões por hora · todos os dias</p></div><span class="tag">Pico às 11h</span></div><div class="hour-chart">
+              <i class="hour-bar" style="--h:12%" data-tip="0h · 94 sessões"></i><i class="hour-bar" style="--h:8%"></i><i class="hour-bar" style="--h:5%"></i><i class="hour-bar" style="--h:4%"></i><i class="hour-bar" style="--h:6%"></i><i class="hour-bar" style="--h:11%"></i><i class="hour-bar" style="--h:22%"></i><i class="hour-bar" style="--h:39%"></i><i class="hour-bar" style="--h:58%"></i><i class="hour-bar" style="--h:76%"></i><i class="hour-bar" style="--h:91%"></i><i class="hour-bar peak" style="--h:100%" data-tip="11h · 1.482 sessões"></i><i class="hour-bar" style="--h:88%"></i><i class="hour-bar" style="--h:68%"></i><i class="hour-bar" style="--h:72%"></i><i class="hour-bar" style="--h:81%"></i><i class="hour-bar" style="--h:74%"></i><i class="hour-bar" style="--h:64%"></i><i class="hour-bar" style="--h:52%"></i><i class="hour-bar" style="--h:43%"></i><i class="hour-bar" style="--h:35%"></i><i class="hour-bar" style="--h:28%"></i><i class="hour-bar" style="--h:21%"></i><i class="hour-bar" style="--h:16%"></i>
+            </div><div class="hour-labels"><span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>23h</span></div></article>
+          </div>
+          <div class="grid grid-3 section-gap">
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Exemplo de mapa de cliques</h2><p class="card-note">Representação ilustrativa, não ferramenta conectada</p></div><span class="tag demo">Demonstração</span></div><div class="map-demo"><div class="map-browser"><i></i><i></i><i></i></div><div class="wire-page"><div class="wire-nav"></div><div class="wire-hero"></div><div class="wire-row"><i></i><i></i><i></i></div></div><span class="heat" style="--s:105px;--x:51%;--y:38%"></span><span class="heat orange" style="--s:82px;--x:69%;--y:69%"></span><span class="heat" style="--s:60px;--x:30%;--y:68%"></span><span class="map-caption">Visual fictício</span></div></article>
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Exemplo de mapa de rolagem</h2><p class="card-note">Profundidade agregada simulada</p></div><span class="tag demo">Demonstração</span></div><div class="scroll-map"><span class="depth-label" style="top:18px">100% de sessões</span><span class="depth-label" style="top:116px">61% chegam aqui</span><span class="depth-label" style="top:211px">38% chegam aqui</span><span class="depth-label" style="bottom:13px">24% chegam ao fim</span></div></article>
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Exemplo de sessão</h2><p class="card-note">Sequência agregada; não é uma gravação real</p></div><span class="tag demo">Demonstração</span></div><div class="journey" style="display:grid">
+              <div class="journey-step" style="width:100%"><strong>Google orgânico → Portfólio</strong><span>00:00 · entrada</span></div><div class="journey-arrow" style="text-align:center">↓</div><div class="journey-step" style="width:100%"><strong>Caso “Operação Horizonte”</strong><span>01:18 · 88% de scroll</span></div><div class="journey-arrow" style="text-align:center">↓</div><div class="journey-step" style="width:100%;border-color:var(--accent)"><strong>Gestão comercial → WhatsApp</strong><span>03:46 · ação registrada</span></div>
+            </div></article>
+          </div>
+          <article class="card section-gap"><div class="card-header"><div><h2 class="card-title">Regiões aproximadas</h2><p class="card-note">Somente agrupamentos amplos; sem localização individual</p></div></div><div class="metric-strip"><div class="strip-item"><span>São Paulo</span><strong>47%</strong></div><div class="strip-item"><span>Minas Gerais</span><strong>18%</strong></div><div class="strip-item"><span>Paraná</span><strong>12%</strong></div><div class="strip-item"><span>Demais regiões</span><strong>23%</strong></div></div></article>
+        </section>
+
+        <section class="view" id="view-acoes">
+          <div class="page-heading"><div><p class="eyebrow">Ações comerciais</p><h1>Onde o interesse avança.</h1><p>Cliques e envios que sinalizam intenção — sem confundir ação com venda concluída.</p></div><span class="updated">Ações no site · não inclui CRM</span></div>
+          <div class="grid grid-4">
+            <article class="card kpi"><div><div class="kpi-label">WhatsApp</div><div class="kpi-value">428</div></div><div class="kpi-bottom"><span>52,7% das ações</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Formulários enviados</div><div class="kpi-value">186</div></div><div class="kpi-bottom"><span>22,9% das ações</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Cliques para ligar</div><div class="kpi-value">103</div></div><div class="kpi-bottom"><span>12,7% das ações</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Downloads</div><div class="kpi-value">95</div></div><div class="kpi-bottom"><span>11,7% das ações</span></div></article>
+          </div>
+          <div class="grid grid-2 section-gap">
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Ações por ponto de contato</h2><p class="card-note">Cliques e envios registrados</p></div></div><div class="bars">
+              <div class="bar-row"><span class="bar-name">WhatsApp · página de serviço</span><div class="bar-track"><div class="bar-fill" style="--w:100%"></div></div><span class="bar-value">284</span></div><div class="bar-row"><span class="bar-name">Formulário · contato</span><div class="bar-track"><div class="bar-fill" style="--w:65%"></div></div><span class="bar-value">186</span></div><div class="bar-row"><span class="bar-name">WhatsApp · CTA final</span><div class="bar-track"><div class="bar-fill" style="--w:51%"></div></div><span class="bar-value">144</span></div><div class="bar-row"><span class="bar-name">Telefone · cabeçalho</span><div class="bar-track"><div class="bar-fill" style="--w:36%"></div></div><span class="bar-value">103</span></div><div class="bar-row"><span class="bar-name">Download · diagnóstico</span><div class="bar-track"><div class="bar-fill" style="--w:33%"></div></div><span class="bar-value">95</span></div>
+            </div></article>
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Caminhos antes da ação</h2><p class="card-note">Sequências agregadas mais frequentes</p></div></div><div class="table-wrap"><table><thead><tr><th>Caminho</th><th>Ações</th><th>Tempo</th></tr></thead><tbody><tr class="focus"><td>Portfólio → Serviço → WhatsApp</td><td>196</td><td>4m 12s</td></tr><tr><td>Início → Serviço → Formulário</td><td>142</td><td>3m 08s</td></tr><tr><td>Google → Express → WhatsApp</td><td>88</td><td>2m 41s</td></tr><tr><td>Instagram → Início → Telefone</td><td>61</td><td>1m 56s</td></tr><tr><td>Artigo → Download</td><td>57</td><td>5m 03s</td></tr></tbody></table></div></article>
+          </div>
+          <article class="card section-gap"><div class="card-header"><div><h2 class="card-title">Limite desta leitura</h2><p class="card-note">O que o painel pode e não pode afirmar</p></div><span class="tag">Sem CRM</span></div><div class="reading-grid"><div class="reading-part"><strong>O que sabemos</strong><p>Uma interação importante ocorreu no site e pode indicar intenção comercial.</p></div><div class="reading-part"><strong>O que não sabemos</strong><p>Se houve conversa, qualificação, proposta, fechamento ou receita atribuída.</p></div><div class="reading-part"><strong>Como evoluir</strong><p>Integrar o CRM e definir regras de conciliação para acompanhar o resultado após o clique.</p></div></div></article>
+        </section>
+
+        <section class="view" id="view-marketing">
+          <div class="page-heading"><div><p class="eyebrow">Marketing</p><h1>Tráfego com contexto.</h1><p>Volume, qualidade de interação e custo das campanhas no mesmo quadro.</p></div><span class="updated">Google Ads integrado · dados sintéticos</span></div>
+          <div class="grid grid-4">
+            <article class="card kpi"><div><div class="kpi-label">Investimento</div><div class="kpi-value">R$ 18,6k</div></div><div class="kpi-bottom"><span>Google Ads · 30 dias</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Cliques pagos</div><div class="kpi-value">4.789</div></div><div class="kpi-bottom"><span>CPC médio · R$ 3,88</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Ações via Ads</div><div class="kpi-value">214</div></div><div class="kpi-bottom"><span>4,5% dos cliques</span></div></article>
+            <article class="card kpi"><div><div class="kpi-label">Custo por ação</div><div class="kpi-value">R$ 86,92</div></div><div class="kpi-bottom"><span><b class="delta down">+9,6%</b> vs. anterior</span></div></article>
+          </div>
+          <article class="card section-gap"><div class="card-header"><div><h2 class="card-title">Desempenho das campanhas</h2><p class="card-note">Ação = WhatsApp, telefone, formulário ou download</p></div><span class="tag">Google Ads</span></div><div class="table-wrap"><table><thead><tr><th>Campanha</th><th>Cliques</th><th>Engajamento</th><th>Ações</th><th>Custo / ação</th><th>Leitura</th></tr></thead><tbody>
+            <tr class="focus"><td>Consultoria · ampla</td><td>2.146</td><td>31%</td><td>46</td><td>R$ 142,30</td><td><span class="tiny-status attention">Atenção</span></td></tr>
+            <tr><td>Planejamento · intenção</td><td>1.102</td><td>69%</td><td>71</td><td>R$ 71,18</td><td><span class="tiny-status good">Eficiente</span></td></tr>
+            <tr><td>Gestão comercial</td><td>846</td><td>63%</td><td>52</td><td>R$ 78,40</td><td><span class="tiny-status good">Eficiente</span></td></tr>
+            <tr><td>Marca · Áurea</td><td>472</td><td>78%</td><td>28</td><td>R$ 38,12</td><td><span class="tiny-status">Estável</span></td></tr>
+            <tr><td>Remarketing</td><td>223</td><td>74%</td><td>17</td><td>R$ 64,75</td><td><span class="tiny-status">Estável</span></td></tr>
+          </tbody></table></div></article>
+          <div class="grid grid-2 section-gap"><article class="card"><div class="card-header"><div><h2 class="card-title">Canais e ações</h2><p class="card-note">Eficiência comparada</p></div></div><div class="bars"><div class="bar-row"><span class="bar-name">Google orgânico</span><div class="bar-track"><div class="bar-fill" style="--w:100%"></div></div><span class="bar-value">318</span></div><div class="bar-row"><span class="bar-name">Google Ads</span><div class="bar-track"><div class="bar-fill" style="--w:67%"></div></div><span class="bar-value">214</span></div><div class="bar-row"><span class="bar-name">Instagram</span><div class="bar-track"><div class="bar-fill" style="--w:39%"></div></div><span class="bar-value">124</span></div><div class="bar-row"><span class="bar-name">Direto</span><div class="bar-track"><div class="bar-fill" style="--w:31%"></div></div><span class="bar-value">98</span></div><div class="bar-row"><span class="bar-name">Indicações</span><div class="bar-track"><div class="bar-fill" style="--w:18%"></div></div><span class="bar-value">58</span></div></div></article>
+            <article class="card signal-card"><div class="signal-index">02</div><p class="eyebrow" style="color:inherit;opacity:.58">Sinal de mídia</p><h3>A campanha de maior volume apresenta o menor engajamento e o maior custo por ação.</h3><p>Segmentação ampla ou desalinhamento entre anúncio e página são hipóteses possíveis — não causas confirmadas.</p><button class="signal-link" data-go="leituras">Ver teste sugerido →</button></article></div>
+        </section>
+
+        <section class="view" id="view-funil">
+          <div class="page-heading"><div><p class="eyebrow">Funil</p><h1>Onde a jornada perde força.</h1><p>Um exemplo configurado da entrada até uma ação comercial registrada.</p></div><span class="updated">Funil demonstrativo · não representa vendas</span></div>
+          <div class="grid grid-3">
+            <article class="card span-2"><div class="card-header"><div><h2 class="card-title">Exemplo de funil comercial</h2><p class="card-note">Visitantes únicos por etapa</p></div><span class="tag demo">Demonstração</span></div><div class="funnel">
+              <div class="funnel-row"><div class="funnel-label"><strong>Entrada</strong><span>Visitantes</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:100%;--opacity:22%">18.420</div></div><div class="funnel-rate">100%</div></div>
+              <div class="funnel-row"><div class="funnel-label"><strong>Serviço visto</strong><span>Exploração</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:62%;--opacity:38%">11.420</div></div><div class="funnel-rate">62,0%</div></div>
+              <div class="funnel-row"><div class="funnel-label"><strong>Detalhe aberto</strong><span>Interesse</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:32%;--opacity:54%">5.913</div></div><div class="funnel-rate">32,1%</div></div>
+              <div class="funnel-row"><div class="funnel-label"><strong>CTA iniciado</strong><span>Intenção</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:7.4%;--opacity:72%">1.364</div></div><div class="funnel-rate">7,4%</div></div>
+              <div class="funnel-row"><div class="funnel-label"><strong>Ação concluída</strong><span>No site</span></div><div class="funnel-track"><div class="funnel-fill" style="--w:4.4%;--opacity:96%">812</div></div><div class="funnel-rate">4,4%</div></div>
+            </div></article>
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Maior ponto de queda</h2><p class="card-note">Serviço visto → detalhe aberto</p></div></div><div class="kpi-value" style="margin-top:28px">48,2%</div><p style="color:var(--muted);font-size:12px;max-width:260px">A queda é 17 pontos maior no celular do que no computador.</p><div class="device-list" style="margin-top:31px"><div class="device-row"><span class="name">Celular</span><span class="value">55%</span><div class="track"><div class="fill" style="--w:55%"></div></div></div><div class="device-row"><span class="name">Computador</span><span class="value">38%</span><div class="track"><div class="fill" style="--w:38%;--o:.55"></div></div></div></div></article>
+          </div>
+          <div class="grid grid-2 section-gap"><article class="card"><div class="card-header"><div><h2 class="card-title">Avanço por dispositivo</h2><p class="card-note">Da entrada até a ação registrada</p></div></div><div class="table-wrap"><table><thead><tr><th>Dispositivo</th><th>Entradas</th><th>Detalhes</th><th>Ações</th><th>Taxa</th></tr></thead><tbody><tr class="focus"><td>Celular</td><td>12.526</td><td>3.529</td><td>426</td><td>3,4%</td></tr><tr><td>Computador</td><td>5.342</td><td>2.201</td><td>365</td><td>6,8%</td></tr><tr><td>Tablet</td><td>552</td><td>183</td><td>21</td><td>3,8%</td></tr></tbody></table></div></article>
+            <article class="card"><div class="card-header"><div><h2 class="card-title">Leitura do funil</h2><p class="card-note">Teste antes de concluir</p></div></div><div class="reading-grid" style="grid-template-columns:1fr"><div class="reading-part"><strong>Sinal observado</strong><p>Usuários de celular avançam menos entre a visualização e a abertura do detalhe.</p></div><div class="reading-part"><strong>Hipótese</strong><p>Hierarquia, tamanho das áreas clicáveis ou carregamento podem dificultar a exploração.</p></div><div class="reading-part"><strong>Possível teste</strong><p>Simplificar os cards no celular e comparar a taxa de abertura em um teste controlado.</p></div></div></article></div>
+        </section>
+
+        <section class="view" id="view-leituras">
+          <div class="page-heading"><div><p class="eyebrow">Leituras possíveis</p><h1>Do sinal ao teste.</h1><p>Hipóteses sustentadas por métricas, sempre com revisão humana e sem afirmar causalidade.</p></div><span class="updated">Leituras editoriais · não geradas automaticamente</span></div>
+          <div class="insight-list">
+            <article class="insight"><div class="insight-number">01</div><div><h3>Uma oferta pouco exposta concentra intenção.</h3><div class="reading-grid"><div class="reading-part"><strong>Sinal observado</strong><p>Consultoria Express reúne 7,2% das visualizações de serviço, mas registra taxa de ação de 11,8% — 2,3× a média.</p></div><div class="reading-part"><strong>Hipótese</strong><p>A proposta de entrada pode responder melhor a visitantes que ainda não estão prontos para um projeto amplo.</p></div><div class="reading-part"><strong>Possível teste</strong><p>Subir a oferta para a primeira dobra da página de serviços e comparar ações qualificadas por 30 dias.</p></div></div></div></article>
+            <article class="insight"><div class="insight-number">02</div><div><h3>Volume pago não está se convertendo em exploração.</h3><div class="reading-grid"><div class="reading-part"><strong>Sinal observado</strong><p>“Consultoria · ampla” traz 44,8% dos cliques pagos, porém engaja 31% e custa R$ 142,30 por ação.</p></div><div class="reading-part"><strong>Hipótese</strong><p>Termos muito abrangentes ou uma promessa diferente da página podem atrair intenção pouco compatível.</p></div><div class="reading-part"><strong>Possível teste</strong><p>Separar grupos por intenção e criar uma página específica; manter orçamento controlado durante a comparação.</p></div></div></div></article>
+            <article class="insight"><div class="insight-number">03</div><div><h3>O celular perde mais pessoas antes do detalhe.</h3><div class="reading-grid"><div class="reading-part"><strong>Sinal observado</strong><p>A queda entre serviço visto e detalhe aberto é de 55% no celular, contra 38% no computador.</p></div><div class="reading-part"><strong>Hipótese</strong><p>Cards densos, áreas de toque pequenas ou tempo de carregamento podem criar fricção no mobile.</p></div><div class="reading-part"><strong>Possível teste</strong><p>Aplicar cards compactos, CTA visível e validar desempenho; medir abertura e ação separadamente.</p></div></div></div></article>
+            <article class="insight"><div class="insight-number">04</div><div><h3>O portfólio parece ajudar a continuidade.</h3><div class="reading-grid"><div class="reading-part"><strong>Sinal observado</strong><p>72% das entradas pelo portfólio continuam navegando, contra 48% das entradas pela página inicial.</p></div><div class="reading-part"><strong>Hipótese</strong><p>Casos concretos podem oferecer confiança e contexto antes da análise de serviços.</p></div><div class="reading-part"><strong>Possível teste</strong><p>Incluir um caso resumido na página inicial e observar avanço para serviço e contato.</p></div></div></div></article>
+          </div>
+          <article class="card context-card section-gap"><div class="company-grid"><div><div class="company-name">Áurea Estratégia</div><div class="company-meta">Empresa fictícia de consultoria · São Paulo, Brasil</div></div><div><div class="card-header" style="margin-bottom:13px"><div><h2 class="card-title">Serviços do cenário</h2><p class="card-note">Portfólio criado exclusivamente para esta demonstração</p></div></div><div class="service-chips"><span class="service-chip">Planejamento estratégico</span><span class="service-chip">Gestão comercial</span><span class="service-chip">Processos e operação</span><span class="service-chip">Mentoria executiva</span><span class="service-chip">Consultoria Express</span></div></div></div></article>
+        </section>
+
+        <footer class="footer"><span><strong>Dados demonstrativos e fictícios.</strong> Nenhum dado pessoal ou real de clientes.</span><span>Áurea Estratégia · Cenário v1.0</span></footer>
+      </div>
+    </main>
+  </div>
+  <div class="tooltip" id="tooltip" role="status"></div>
+  <script>
+    (() => {
+      'use strict';
+      const labels = {
+        executiva: 'Visão executiva', visibilidade: 'Visibilidade', interesse: 'Interesse',
+        comportamento: 'Comportamento', acoes: 'Ações comerciais', marketing: 'Marketing',
+        funil: 'Funil', leituras: 'Leituras possíveis'
+      };
+      const periodData = {
+        7: { visitors: '4.612', actions: '209', actionRate: '4,5%', returning: '1.241', attention: '3m 48s' },
+        30: { visitors: '18.420', actions: '812', actionRate: '4,4%', returning: '4.862', attention: '3m 42s' },
+        90: { visitors: '51.870', actions: '2.187', actionRate: '4,2%', returning: '12.906', attention: '3m 35s' }
+      };
+      const sidebar = document.getElementById('sidebar');
+      const currentView = document.getElementById('currentView');
+
+      function showView(name, updateHash = true) {
+        if (!labels[name]) name = 'executiva';
+        document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.id === `view-${name}`));
+        document.querySelectorAll('.nav-button').forEach(button => button.classList.toggle('active', button.dataset.view === name));
+        currentView.textContent = labels[name];
+        sidebar.classList.remove('open');
+        if (updateHash) history.replaceState(null, '', `#${name}`);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
+      document.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => showView(button.dataset.go)));
+      document.getElementById('menuButton').addEventListener('click', () => sidebar.classList.toggle('open'));
+      document.addEventListener('click', event => {
+        if (window.innerWidth <= 820 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !event.target.closest('#menuButton')) sidebar.classList.remove('open');
+      });
+
+      const root = document.documentElement;
+      let savedTheme = null;
+      try { savedTheme = localStorage.getItem('ic-demo-theme'); } catch (_) { /* modo local restrito */ }
+      if (savedTheme) root.dataset.theme = savedTheme;
+      else if (matchMedia('(prefers-color-scheme: dark)').matches) root.dataset.theme = 'dark';
+      document.getElementById('themeButton').addEventListener('click', () => {
+        root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        try { localStorage.setItem('ic-demo-theme', root.dataset.theme); } catch (_) { /* preferência vale nesta sessão */ }
+      });
+
+      document.getElementById('periodSelect').addEventListener('change', event => {
+        const data = periodData[event.target.value];
+        Object.entries(data).forEach(([key, value]) => document.querySelectorAll(`[data-kpi="${key}"]`).forEach(node => node.textContent = value));
+        document.querySelectorAll('.card .tag').forEach(tag => { if (/dias$/.test(tag.textContent)) tag.textContent = `${event.target.value} dias`; });
+      });
+
+      const tooltip = document.getElementById('tooltip');
+      document.querySelectorAll('[data-tip]').forEach(item => {
+        item.addEventListener('pointerenter', () => { tooltip.textContent = item.dataset.tip; tooltip.classList.add('show'); });
+        item.addEventListener('pointermove', event => { tooltip.style.left = `${Math.min(event.clientX + 12, window.innerWidth - 150)}px`; tooltip.style.top = `${event.clientY - 32}px`; });
+        item.addEventListener('pointerleave', () => tooltip.classList.remove('show'));
+      });
+      addEventListener('scroll', () => document.getElementById('topbar').classList.toggle('scrolled', scrollY > 8), { passive: true });
+      showView(location.hash.slice(1) || 'executiva', false);
+    })();
+  </script>
+</body>
+</html>
+
