@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Inteligência Comercial para Sites</title>
-<meta name="description" content="Descubra o que acontece no seu site depois do clique. Sinais reais de comportamento para orientar marketing e vendas.">
+<meta name="description" content="Uma camada de acompanhamento que organiza os sinais de quem visita o seu site para orientar decisões de marketing e vendas com dados reais.">
 <meta name="color-scheme" content="light">
 <link rel="preload" href="fonts/Geist-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/Geist-600.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* ===================== FONTES ===================== */
+/* ===================== FONTES (carregadas localmente) ===================== */
 @font-face { font-family:"Geist"; font-weight:400; font-style:normal; font-display:swap; src:url("fonts/Geist-400.woff2") format("woff2"); }
 @font-face { font-family:"Geist"; font-weight:500; font-style:normal; font-display:swap; src:url("fonts/Geist-500.woff2") format("woff2"); }
 @font-face { font-family:"Geist"; font-weight:600; font-style:normal; font-display:swap; src:url("fonts/Geist-600.woff2") format("woff2"); }
@@ -23,12 +23,12 @@
   --bg-subtle:#FAF9F6;
   --bg-deep:#F3F1EC;
   --ink:#17161A;
-  --ink-muted:#6B6963;
-  --ink-faint:#A19E96;
+  --ink-muted:#5F5D57;      /* um pouco mais escuro que o original: melhora contraste */
+  --ink-faint:#6E6B63;      /* escurecido para atingir AA (>=4.5:1) mesmo em texto pequeno */
   --line:#EAE7DF;
   --line-strong:#DCD8CD;
   --gold:#C8A24B;
-  --gold-deep:#8F6E2E;
+  --gold-deep:#8A6A2C;      /* dourado escuro para texto sobre branco (contraste AA) */
   --gold-bright:#DAB565;
   --gold-soft:#F7F0DE;
   --gold-line:rgba(200,162,75,.35);
@@ -36,16 +36,28 @@
   --shadow-md:0 16px 40px -20px rgba(23,22,26,.18);
   --shadow-lg:0 30px 70px -24px rgba(23,22,26,.24);
   --surface:#FFFFFF;
-  --good:#3E7D5A;
+  --good:#2F6B49;
   --bad:#A8493A;
   --r-sm:10px;
   --r-md:18px;
   --r-lg:28px;
-  /* tokens fixos: sempre escuros, em qualquer tema (blocos de contraste tipo Apple) */
+
+  /* Containers e ritmo: fluidos, coordenados com a largura da janela */
+  --gutter:clamp(1.25rem,3.5vw,3rem);
+  --wrap:min(92vw, 1520px);       /* cresce com a janela até um teto legível */
+  --wrap-narrow:min(92vw, 800px); /* medida de leitura para texto corrido */
+  --wrap-mid:min(92vw, 1080px);   /* largura intermediária para blocos focados */
+  --section-y:clamp(3.5rem,7vw,7rem);
+
+  /* Escala tipográfica fluida */
+  --h2:clamp(1.55rem, 1.05rem + 2.1vw, 2.55rem);
+  --h2-lg:clamp(1.7rem, 1rem + 2.9vw, 2.9rem);
+
+  /* Tokens fixos: sempre escuros, em qualquer contexto (blocos de contraste) */
   --void-bg:#0B0B0D;
   --void-ink:#F5F3EE;
-  --void-muted:#ACA9A1;
-  --void-faint:#77746D;
+  --void-muted:#B7B4AC;
+  --void-faint:#83807A;
   --void-line:rgba(255,255,255,.12);
   --void-gold:#DDBA6C;
   --void-gold-bright:#EAC97E;
@@ -53,7 +65,7 @@
 
 /* ===================== BASE ===================== */
 *{box-sizing:border-box;}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:5rem;}
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} *{animation-duration:.01ms !important; transition-duration:.01ms !important;} }
 body{
   margin:0;background:var(--bg);color:var(--ink);
@@ -66,12 +78,25 @@ a{color:inherit;text-decoration:none;}
 button{font-family:inherit;}
 h1,h2,h3{font-family:"Geist",sans-serif;font-weight:600;text-wrap:balance;letter-spacing:-0.02em;margin:0;color:var(--ink);}
 p{margin:0;}
-:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px;}
+:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;border-radius:4px;}
 
-.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(1.25rem,4vw,3rem);}
-.wrap-narrow{max-width:760px;margin:0 auto;padding:0 clamp(1.25rem,4vw,3rem);}
-.section{padding:clamp(4rem,10vw,9rem) 0;}
+/* Containers fluidos: largura acompanha a janela; medida de leitura por conteúdo */
+.wrap{width:100%;max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter);}
+.wrap-narrow{width:100%;max-width:var(--wrap-narrow);margin-inline:auto;padding-inline:var(--gutter);}
+.wrap-mid{width:100%;max-width:var(--wrap-mid);margin-inline:auto;padding-inline:var(--gutter);}
+.section{padding-block:var(--section-y);}
 .section.alt{background:var(--bg-subtle);}
+
+/* Ritmo de superfícies: cada capítulo ganha separação sem alternâncias bruscas. */
+#problema{background:linear-gradient(180deg,var(--bg) 0%,var(--bg-subtle) 100%);}
+#comportamento{background:var(--bg-deep);}
+#acompanhar{background:var(--bg-subtle);}
+#duvidas{background:linear-gradient(180deg,var(--bg-subtle) 0%,var(--bg-deep) 100%);}
+
+/* Limites de leitura reaproveitáveis (não deixam o texto esticar em telas largas) */
+.measure{max-width:60ch;}
+.measure-sm{max-width:46ch;}
+.measure-head{max-width:24ch;}
 
 .eyebrow{
   display:inline-flex;align-items:center;gap:.5em;
@@ -79,20 +104,24 @@ p{margin:0;}
   color:var(--gold-deep);
 }
 .eyebrow::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);}
-
 .center{text-align:center;}
+.section-head h2{font-size:var(--h2);margin-top:1rem;}
+.section-head.big h2{font-size:var(--h2-lg);}
+.section-lede{margin-top:1.1rem;color:var(--ink-muted);font-size:1.06rem;}
+.section-hint{margin-top:1rem;color:var(--gold-deep);font-size:.94rem;font-weight:500;}
+.section-close{margin-top:2.4rem;font-size:1.2rem;font-weight:500;color:var(--ink);}
 
-/* reveal on scroll */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+/* Revelação no scroll (conteúdo continua acessível se o observer não rodar) */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
 .reveal.in{opacity:1;transform:translateY(0);}
-.reveal-delay-1{transition-delay:.08s;} .reveal-delay-2{transition-delay:.16s;} .reveal-delay-3{transition-delay:.24s;} .reveal-delay-4{transition-delay:.32s;}
+.reveal-delay-1{transition-delay:.07s;} .reveal-delay-2{transition-delay:.14s;} .reveal-delay-3{transition-delay:.21s;} .reveal-delay-4{transition-delay:.28s;}
 
 /* ===================== NAV ===================== */
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:1.1rem clamp(1.25rem,4vw,3rem);
-  background:color-mix(in srgb, var(--bg) 78%, transparent);
+  padding:1.05rem var(--gutter);
+  background:color-mix(in srgb, var(--bg) 80%, transparent);
   backdrop-filter:blur(14px) saturate(1.4);
   border-bottom:1px solid transparent;
   transition:border-color .3s, background .3s;
@@ -110,7 +139,7 @@ p{margin:0;}
 .nav-cta:hover{transform:translateY(-1px);}
 .nav-cta svg{flex-shrink:0;}
 
-/* ===================== BUTTONS ===================== */
+/* ===================== BOTÕES ===================== */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
   padding:1rem 2rem;border-radius:100px;font-size:1rem;font-weight:500;
@@ -121,146 +150,163 @@ p{margin:0;}
 .btn-primary{background:linear-gradient(180deg, var(--gold-bright), var(--gold));color:#20180A;box-shadow:var(--shadow-md);}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong);}
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold-deep);}
-
-/* cue de rolagem do hero: convite, não pedido de compra */
-.hero-cue{
-  display:inline-flex;align-items:center;gap:.65rem;
-  padding:.85rem 1.5rem;border-radius:100px;
-  border:1px solid var(--line-strong);color:var(--ink-muted);
-  font-size:.96rem;font-weight:500;
-  transition:border-color .3s, color .3s, transform .3s;
-}
-.hero-cue:hover{border-color:var(--gold);color:var(--gold-deep);transform:translateY(-2px);}
-.hero-cue-arrow{animation:bob 2.2s ease-in-out infinite;}
-@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
-@media (prefers-reduced-motion:reduce){.hero-cue-arrow{animation:none;}}
+.btn-ghost:hover{border-color:var(--gold-deep);color:var(--gold-deep);}
+.btn svg{flex-shrink:0;}
 
 /* ===================== HERO ===================== */
-.hero{position:relative;padding:clamp(7rem,16vw,11rem) 0 clamp(3.5rem,8vw,6rem);overflow:hidden;}
-.hero-grid{display:grid;gap:clamp(2.5rem,6vw,4rem);grid-template-columns:1fr;align-items:center;}
-.hero-copy{max-width:780px;}
-.hero h1{font-size:clamp(2.15rem,5.2vw,4.4rem);line-height:1.08;letter-spacing:-0.03em;}
+.hero{position:relative;padding:clamp(6.5rem,7rem + 4vh,9.5rem) 0 clamp(3rem,6vw,5.5rem);overflow:hidden;}
+.hero-grid{display:grid;gap:clamp(2rem,5vw,4rem);grid-template-columns:1fr;align-items:center;}
+.hero-copy{min-width:0;}
+.hero h1{
+  font-size:clamp(2.05rem, 1.1rem + 3.6vw, 4rem);
+  line-height:1.05;letter-spacing:-0.03em;margin-top:1.1rem;
+  max-width:20ch;   /* alto o bastante para usar a largura; evita linha longa demais */
+}
 .hero h1 em{font-style:normal;color:var(--gold-deep);}
-.hero-sub{margin-top:1.4rem;font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--ink-muted);max-width:46ch;}
-.hero-actions{margin-top:2.2rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+.hero-sub{margin-top:1.4rem;font-size:clamp(1.05rem,1rem + .35vw,1.22rem);color:var(--ink-muted);max-width:52ch;}
+.hero-actions{margin-top:2rem;display:flex;gap:.9rem;flex-wrap:wrap;align-items:center;}
+.hero-reassure{margin-top:1.2rem;font-size:.9rem;color:var(--ink-faint);}
 .hero-visual{
-  position:relative;height:clamp(240px,42vw,460px);
+  position:relative;min-height:clamp(220px,34vw,420px);
   border-radius:var(--r-lg);
   background:radial-gradient(120% 100% at 30% 0%, var(--bg-deep), var(--bg-subtle));
-  border:1px solid var(--line);
-  overflow:hidden;
-  box-shadow:var(--shadow-lg);
+  border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow-lg);
 }
 .hero-visual canvas{width:100%;height:100%;display:block;}
 .hero-visual .legend{
-  position:absolute;bottom:1.2rem;left:1.2rem;right:1.2rem;
+  position:absolute;bottom:1.1rem;left:1.2rem;right:1.2rem;
   display:flex;justify-content:space-between;gap:1rem;
   font-family:"Geist Mono",monospace;font-size:.7rem;letter-spacing:.03em;color:var(--ink-faint);
 }
 .hero-visual .legend b{color:var(--gold-deep);font-weight:500;}
-@media(min-width:900px){ .hero-grid{grid-template-columns:1.05fr .95fr;} }
+/* Duas colunas quando há largura; o H1 ganha espaço e reflui em menos linhas */
+@media(min-width:900px){ .hero-grid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);} }
 
-/* ===================== PROBLEM CARDS ===================== */
-.q-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.1rem;margin-top:2.6rem;}
+/* ===================== CARTÕES DE PROBLEMA ===================== */
+/* 6 cartões distribuídos em 3x2 no desktop, mantendo a distribuição uniforme */
+.q-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1rem,1.6vw,1.4rem);margin-top:2.6rem;}
 .q-card{
   background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
-  padding:1.8rem 1.6rem;display:flex;flex-direction:column;gap:1rem;
+  padding:1.7rem 1.6rem;display:flex;flex-direction:column;gap:1.1rem;
   transition:transform .35s cubic-bezier(.16,1,.3,1), border-color .35s, box-shadow .35s;
 }
 .q-card:hover{transform:translateY(-4px);border-color:var(--gold-line);box-shadow:var(--shadow-md);}
 .q-card .icon{color:var(--gold-deep);}
-.q-card p{font-size:1.05rem;font-weight:500;line-height:1.4;color:var(--ink);}
-.section-lede{max-width:56ch;margin-top:1.1rem;color:var(--ink-muted);font-size:1.06rem;}
-.section-hint{margin-top:1rem;color:var(--gold-deep);font-size:.94rem;font-weight:500;}
-.section-close{margin-top:2.4rem;font-size:1.2rem;font-weight:500;color:var(--ink);max-width:44ch;}
+/* título do cartão: prioridade visual */
+.q-card h3{font-size:1.12rem;line-height:1.3;color:var(--ink);}
+/* descrição: menor e secundária, contraste suficiente sem competir com o título */
+.q-card p{margin-top:.5rem;font-size:.96rem;font-weight:400;line-height:1.5;color:var(--ink-muted);}
+/* tablet: 2 colunas; mobile: um cartão por linha */
+@media(max-width:900px){.q-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:560px){.q-grid{grid-template-columns:1fr;}}
 
-/* ===================== COST SECTION (bloco fixo, sempre escuro) ===================== */
-.cost-section{background:var(--void-bg);color:var(--void-muted);}
-.cost-section .eyebrow{color:var(--void-gold-bright);}
-.cost-section .eyebrow::before{background:var(--void-gold-bright);}
-.cost-section h2{color:var(--void-ink);}
-.cost-list{margin-top:2.6rem;display:flex;flex-direction:column;}
-.cost-row{display:grid;grid-template-columns:2.4rem 1fr;gap:1.2rem;padding:1.5rem 0;border-top:1px solid var(--void-line);align-items:baseline;}
-.cost-row:last-of-type{border-bottom:1px solid var(--void-line);}
-.cost-row .mark{font-family:"Geist Mono",monospace;color:var(--void-gold-bright);font-size:.95rem;}
-.cost-row p{font-size:1.1rem;color:var(--void-muted);max-width:60ch;}
-.cost-row p b{color:var(--void-ink);}
-.cost-final{margin-top:2.6rem;font-size:clamp(1.35rem,2.6vw,1.9rem);font-weight:600;color:var(--void-ink);letter-spacing:-0.02em;max-width:20ch;}
+/* ===================== COMPORTAMENTO QUE VIRA SINAL (mini-cenas) ===================== */
+/* Duas colunas: texto à esquerda, grade 2x2 de micro-interfaces animadas à direita */
+.behavior-grid{display:grid;grid-template-columns:1fr;gap:clamp(2rem,5vw,3.2rem);align-items:start;}
+@media(min-width:960px){.behavior-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2.4rem,4vw,4rem);}}
+.behavior-copy{min-width:0;}
 
-/* ===================== VISION ===================== */
-.vision-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;margin-top:2.6rem;}
-.vision-card{padding:2.1rem 1.8rem;border-radius:var(--r-md);background:linear-gradient(155deg, var(--gold-soft), var(--bg-subtle) 70%);border:1px solid var(--gold-line);display:flex;flex-direction:column;gap:1rem;}
-.vision-card .num{font-family:"Geist Mono",monospace;font-size:.78rem;color:var(--gold-deep);letter-spacing:.04em;}
-.vision-card p{font-size:1.08rem;font-weight:500;line-height:1.45;}
+/* Grade das quatro mini-cenas */
+.scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(.85rem,1.5vw,1.25rem);}
+.scene{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:1.05rem 1.05rem 1rem;display:flex;flex-direction:column;gap:.8rem;transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .35s,box-shadow .35s;}
+.scene:hover{transform:translateY(-3px);border-color:var(--gold-line);box-shadow:var(--shadow-md);}
+.scene-title{font-size:.96rem;font-weight:600;color:var(--ink);line-height:1.25;letter-spacing:-0.01em;}
+.scene-signal{display:inline-flex;align-items:center;gap:.45rem;font-family:"Geist Mono",monospace;font-size:.68rem;letter-spacing:.02em;color:var(--gold-deep);}
+.scene-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;}
 
-/* ===================== JORNADA (nem toda venda acontece no site) ===================== */
-.journey-flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.7rem;margin-top:2.6rem;}
-.journey-step{padding:.85rem 1.3rem;border-radius:100px;background:var(--surface);border:1px solid var(--line);font-size:.95rem;font-weight:500;color:var(--ink);white-space:nowrap;}
-.journey-arrow{color:var(--gold);flex-shrink:0;}
-@media(max-width:640px){.journey-flow{flex-direction:column;}.journey-arrow{transform:rotate(90deg);}}
+/* Palco: um mini-navegador simplificado */
+.scene-stage{position:relative;height:clamp(104px,14vw,128px);border-radius:var(--r-sm);background:var(--bg-deep);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;}
+.mini-bar{display:flex;align-items:center;gap:.28rem;padding:.34rem .5rem;background:var(--surface);border-bottom:1px solid var(--line);flex-shrink:0;}
+.mini-bar i{width:5px;height:5px;border-radius:50%;background:var(--line-strong);}
+.mini-url{margin-left:.35rem;height:7px;flex:1;border-radius:100px;background:var(--bg-deep);}
+.mini-body{position:relative;flex:1;padding:.5rem .6rem;min-height:0;}
 
-/* ===================== EXTRA BAND ===================== */
-.extra-band{background:linear-gradient(180deg, var(--gold-soft), var(--bg) 70%);border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line);padding:clamp(3.5rem,7vw,5.5rem) 0;}
-.extra-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:100px;background:var(--void-bg);color:var(--void-gold-bright);font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
-.extra-badge svg{flex-shrink:0;}
-.extra-note{display:block;margin-top:.65rem;font-size:.78rem;font-weight:500;letter-spacing:.04em;color:var(--ink-faint);text-transform:uppercase;}
-.extra-band h2{margin-top:1.1rem;font-size:clamp(1.6rem,3.2vw,2.3rem);}
-.extra-band p{margin:1rem auto 0;}
+/* Linhas de conteúdo (skeleton decorativo) */
+.ln{display:block;height:6px;border-radius:100px;background:var(--line-strong);margin-top:.45rem;}
+.ln:first-child{margin-top:0;}
+.w45{width:45%;}.w55{width:55%;}.w60{width:60%;}.w70{width:70%;}.w90{width:90%;}
 
-/* ===================== HOW IT WORKS ===================== */
-.how-list{margin-top:3rem;position:relative;max-width:720px;margin-left:auto;margin-right:auto;}
-.how-step{display:grid;grid-template-columns:3.4rem 1fr;gap:1.6rem;padding:1.8rem 0;position:relative;}
-.how-step:not(:last-child)::after{content:"";position:absolute;left:1.7rem;top:4.5rem;bottom:-0.4rem;width:1px;background:linear-gradient(var(--gold-line), var(--line));}
-.how-num{width:3.4rem;height:3.4rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Geist Mono",monospace;font-weight:500;font-size:1rem;background:var(--surface);border:1px solid var(--gold-line);color:var(--gold-deep);flex-shrink:0;z-index:1;}
-.how-body h3{font-size:1.18rem;}
-.how-body p{margin-top:.5rem;color:var(--ink-muted);font-size:1.02rem;max-width:52ch;}
+/* Cursor reutilizável */
+.cursor{position:absolute;z-index:2;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(23,22,26,.25));}
+.cursor path{fill:var(--ink);stroke:#fff;stroke-width:1.4;stroke-linejoin:round;}
 
-/* ===================== CATEGORIAS (o que você pode acompanhar) ===================== */
-.cat-list{display:flex;flex-direction:column;gap:.9rem;margin-top:2.8rem;}
-.cat-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;transition:border-color .3s, box-shadow .3s;}
-.cat-card:hover{border-color:var(--gold-line);}
-.cat-head{display:flex;align-items:center;gap:1.1rem;padding:1.25rem 1.4rem;cursor:pointer;list-style:none;}
-.cat-head::-webkit-details-marker{display:none;}
-.cat-icon{width:2.5rem;height:2.5rem;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--gold-soft);color:var(--gold-deep);}
-.cat-titles{flex:1;display:flex;flex-direction:column;gap:.15rem;min-width:0;}
-.cat-titles h3{font-size:1.05rem;}
-.cat-titles .count{font-size:.78rem;color:var(--ink-faint);font-family:"Geist Mono",monospace;}
-.cat-chev{color:var(--ink-faint);transition:transform .3s;flex-shrink:0;}
-details[open] .cat-chev{transform:rotate(180deg);}
-.cat-body{padding:0 1.4rem 1.3rem;border-top:1px solid var(--line);padding-top:1.05rem;}
-.cat-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.45rem 1rem;}
-.cat-item{display:flex;gap:.55rem;padding:.3rem 0;font-size:.92rem;align-items:flex-start;}
-.cat-item .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:.55em;flex-shrink:0;}
-.cat-item .dot.integracao{background:var(--ink-faint);}
-.cat-item .dot.personalizada{background:transparent;border:1.4px solid var(--gold-deep);width:4px;height:4px;}
-.cat-item b{font-weight:600;color:var(--ink);}
-.cat-item span.d{color:var(--ink-muted);}
+/* Cena 1: chega por uma campanha (origem da visita) */
+.scene--source{--sd:-.5s;}
+.origin-chip{margin-left:auto;font-family:"Geist Mono",monospace;font-size:.58rem;font-weight:500;color:var(--gold-deep);background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:100px;padding:.08rem .42rem;letter-spacing:.02em;animation:s1-chip 6s ease-in-out var(--sd) infinite;}
+.load-bar{position:absolute;top:0;left:0;right:0;height:2px;overflow:hidden;}
+.load-fill{display:block;height:100%;width:70%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));border-radius:0 100px 100px 0;animation:s1-load 6s ease-in-out var(--sd) infinite;}
+.scene--source .ln{animation:s1-content 6s ease-in-out var(--sd) infinite;}
+@keyframes s1-load{0%{width:0}45%{width:100%}60%{width:100%}62%{width:0}100%{width:0}}
+@keyframes s1-chip{0%,100%{opacity:.55}45%{opacity:1}}
+@keyframes s1-content{0%,18%{opacity:.25}50%,100%{opacity:1}}
 
-.cat-legend{display:flex;flex-wrap:wrap;gap:1.5rem;margin-top:1.6rem;}
-.cat-legend span{display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--ink-muted);}
-.cat-legend .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.cat-legend .dot.principal{background:var(--gold);}
-.cat-legend .dot.integracao{background:var(--ink-faint);}
-.cat-legend .dot.personalizada{background:transparent;border:1.4px solid var(--gold-deep);}
+/* Cena 2: explora uma oferta (interesse) */
+.scene--offer{--sd:-2s;}
+.offer-track{display:flex;flex-direction:column;gap:.4rem;animation:s2-scroll 7s ease-in-out var(--sd) infinite;}
+.offer-card{height:18px;border-radius:6px;background:var(--surface);border:1px solid var(--line);}
+.offer-card.is-focus{border-color:var(--gold-line);animation:s2-focus 7s ease-in-out var(--sd) infinite;}
+.cursor-2{right:26%;top:46%;animation:s2-cursor 7s ease-in-out var(--sd) infinite;}
+@keyframes s2-scroll{0%,18%{transform:translateY(0)}42%,72%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+@keyframes s2-focus{0%,38%{border-color:var(--line);box-shadow:none}52%,78%{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold-line)}100%{border-color:var(--line)}}
+@keyframes s2-cursor{0%{transform:translate(6px,6px)}42%{transform:translate(0,0)}52%{transform:translate(0,0) scale(.82)}62%{transform:translate(0,0) scale(1)}100%{transform:translate(6px,6px)}}
 
-/* ===================== DASHBOARD MOCKUP ===================== */
-.dash-frame{position:relative;margin-top:3rem;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg);}
-.dash-topbar{display:flex;align-items:center;gap:.6rem;padding:.9rem 1.3rem;border-bottom:1px solid var(--line);background:var(--bg-deep);border-radius:var(--r-lg) var(--r-lg) 0 0;}
-.dash-topbar .traffic{display:flex;gap:.4rem;}
+/* Cena 3: busca mais confiança (pesquisa) */
+.scene--trust{--sd:-3.2s;}
+.trust-stars{display:flex;gap:1px;font-size:.6rem;line-height:1;color:var(--gold);margin-bottom:.4rem;}
+.trust-stars .dim{color:var(--line-strong);}
+.faq-row{border-top:1px solid var(--line);}
+.faq-q{display:flex;align-items:center;gap:.4rem;padding:.28rem 0;}
+.faq-ln{flex:1;height:6px;border-radius:100px;background:var(--line-strong);}
+.faq-ln.short{max-width:60%;}
+.faq-pm{font-family:"Geist Mono",monospace;font-size:.72rem;color:var(--gold-deep);line-height:1;transform:rotate(45deg);}
+.faq-a{overflow:hidden;max-height:24px;}
+.faq-row.is-open .faq-a{animation:s3-open 6.5s ease-in-out var(--sd) infinite;}
+.faq-row.is-open .faq-pm{animation:s3-pm 6.5s ease-in-out var(--sd) infinite;}
+@keyframes s3-open{0%,14%{max-height:0}30%,70%{max-height:24px}86%,100%{max-height:0}}
+@keyframes s3-pm{0%,14%{transform:rotate(0)}30%,70%{transform:rotate(45deg)}86%,100%{transform:rotate(0)}}
+
+/* Cena 4: demonstra intenção (ação de contato) */
+.scene--intent{--sd:-1.1s;}
+.intent-body{display:flex;flex-direction:column;gap:.4rem;}
+.cta-btn{font-size:.6rem;font-weight:600;text-align:center;border-radius:100px;padding:.3rem .5rem;letter-spacing:.01em;}
+.cta-main{color:#20180A;background:linear-gradient(180deg,var(--gold-bright),var(--gold));animation:s4-press 5.5s ease-in-out var(--sd) infinite;}
+.cta-btn.ghost{color:var(--ink-muted);background:transparent;border:1px solid var(--line-strong);}
+.cursor-4{left:46%;top:50%;animation:s4-cursor 5.5s ease-in-out var(--sd) infinite;}
+@keyframes s4-press{0%,52%{transform:scale(1);box-shadow:none}64%{transform:scale(.94);box-shadow:0 0 0 3px var(--gold-soft)}78%{transform:scale(1);box-shadow:0 0 0 7px rgba(200,162,75,0)}100%{transform:scale(1);box-shadow:none}}
+@keyframes s4-cursor{0%{transform:translate(9px,7px);opacity:.7}42%{transform:translate(0,0);opacity:1}58%{transform:translate(0,0) scale(.82)}70%{transform:translate(0,0) scale(1)}100%{transform:translate(9px,7px);opacity:.7}}
+
+/* Responsivo das mini-cenas: mobile compacto, depois uma coluna */
+@media(max-width:520px){.scenes{gap:.7rem;}}
+@media(max-width:380px){.scenes{grid-template-columns:1fr;}}
+
+/* Menos movimento: telas estáticas e legíveis (os estados-base já são significativos) */
+@media (prefers-reduced-motion:reduce){.scene-stage *{animation:none !important;}}
+
+/* ===================== BLOCO ESCURO REUTILIZÁVEL ===================== */
+.section-dark{background:var(--void-bg);color:var(--void-muted);}
+.section-dark .eyebrow{color:var(--void-gold-bright);}
+.section-dark .eyebrow::before{background:var(--void-gold-bright);}
+.section-dark h2,.section-dark h3{color:var(--void-ink);}
+
+/* ===================== PAINEL (MOCKUP ILUSTRATIVO) ===================== */
+.dash-figure{margin:3rem 0 0;}
+.dash-frame{position:relative;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line-strong);box-shadow:var(--shadow-lg);overflow:hidden;}
+.dash-topbar{display:flex;align-items:center;gap:.7rem;padding:.85rem 1.2rem;border-bottom:1px solid var(--line);background:var(--bg-deep);}
+.dash-topbar .traffic{display:flex;gap:.4rem;flex-shrink:0;}
 .dash-topbar .traffic span{width:9px;height:9px;border-radius:50%;background:var(--line-strong);}
-.dash-topbar .url{margin:0 auto;font-family:"Geist Mono",monospace;font-size:.78rem;color:var(--ink-faint);background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:.35rem 1rem;}
-.dash-body{padding:clamp(1.2rem,3vw,2.2rem);display:flex;flex-direction:column;gap:1.3rem;border-radius:0 0 var(--r-lg) var(--r-lg);overflow:hidden;}
-.dash-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;}
-.kpi{padding:1.1rem 1.2rem;border-radius:var(--r-sm);background:var(--bg-subtle);border:1px solid var(--line);display:flex;flex-direction:column;gap:.4rem;}
-.kpi .label{font-size:.73rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;}
+.dash-topbar .title{flex:1;text-align:center;font-size:.82rem;font-weight:500;color:var(--ink-muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dash-tag{flex-shrink:0;display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-deep);background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:100px;padding:.28rem .7rem;}
+.dash-body{padding:clamp(1.1rem,3vw,2.1rem);display:flex;flex-direction:column;gap:1.3rem;}
+.dash-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:1rem;}
+.kpi{padding:1.05rem 1.15rem;border-radius:var(--r-sm);background:var(--bg-subtle);border:1px solid var(--line);display:flex;flex-direction:column;gap:.35rem;}
+.kpi .label{font-size:.73rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;}
 .kpi .value{font-family:"Geist Mono",monospace;font-size:1.5rem;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;}
-.kpi .delta{font-size:.76rem;font-weight:500;}
+.kpi .delta{font-size:.76rem;font-weight:500;color:var(--ink-faint);}
 .kpi .delta.up{color:var(--good);}
 .dash-main{display:grid;grid-template-columns:1fr;gap:1rem;}
 @media(min-width:820px){.dash-main{grid-template-columns:1.5fr 1fr;}}
-.dash-panel{padding:1.25rem 1.35rem;border-radius:var(--r-sm);background:var(--bg-subtle);border:1px solid var(--line);display:flex;flex-direction:column;gap:1rem;}
-.dash-panel h4{font-size:.83rem;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;}
+.dash-panel{padding:1.2rem 1.3rem;border-radius:var(--r-sm);background:var(--bg-subtle);border:1px solid var(--line);display:flex;flex-direction:column;gap:1rem;}
+.dash-panel h4{font-size:.82rem;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;margin:0;}
 .chart-wrap{height:160px;position:relative;}
 .chart-wrap canvas{width:100%;height:100%;}
 .source-row{display:flex;align-items:center;gap:.8rem;font-size:.88rem;}
@@ -268,99 +314,136 @@ details[open] .cat-chev{transform:rotate(180deg);}
 .source-row .bar-track{flex:1;height:7px;border-radius:100px;background:var(--line);overflow:hidden;}
 .source-row .bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gold),var(--gold-bright));width:0%;transition:width 1.1s cubic-bezier(.16,1,.3,1);}
 .source-row .pct{width:36px;text-align:right;font-family:"Geist Mono",monospace;color:var(--ink-muted);font-variant-numeric:tabular-nums;}
+.dash-figcaption{margin-top:1.4rem;font-size:.98rem;color:var(--ink-muted);max-width:62ch;margin-inline:auto;text-align:center;}
+.dash-figcaption b{color:var(--ink);font-weight:600;}
 
-/* painel de IA dentro do dashboard */
-.dash-ai-panel{padding:1.3rem 1.4rem;border-radius:var(--r-sm);background:linear-gradient(155deg, var(--gold-soft), var(--bg-subtle) 80%);border:1px solid var(--gold-line);display:flex;flex-direction:column;gap:.9rem;}
-.dash-ai-head{display:flex;align-items:center;gap:.8rem;}
-.ai-avatar{width:2.1rem;height:2.1rem;border-radius:50%;background:var(--void-bg);color:var(--void-gold-bright);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.ai-name-wrap{display:flex;flex-direction:column;gap:.1rem;min-width:0;}
-.ai-name{font-size:.9rem;font-weight:600;color:var(--ink);}
-.ai-status{font-size:.76rem;color:var(--ink-faint);}
-.dash-ai-msg{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:.85rem 1.05rem;font-size:.9rem;color:var(--ink-muted);max-width:90%;transition:opacity .5s ease;}
-.dash-ai-msg.suggestion{border-color:var(--gold-line);background:var(--gold-soft);color:var(--ink);align-self:flex-end;max-width:92%;}
-.dash-ai-msg b{color:var(--gold-deep);}
-.dash-ai-msg.typing{display:flex;gap:4px;align-items:center;width:fit-content;padding:.85rem 1.1rem;}
-.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-faint);animation:typingBounce 1.2s infinite ease-in-out;}
-.typing-dot:nth-child(2){animation-delay:.15s;}
-.typing-dot:nth-child(3){animation-delay:.3s;}
-@keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.5;}30%{transform:translateY(-4px);opacity:1;}}
-@media(prefers-reduced-motion:reduce){.typing-dot{animation:none;}}
+/* ===================== ANÁLISE COM IA (SEÇÃO OPCIONAL) ===================== */
+.decision-divider{height:1px;margin:clamp(3rem,6vw,4.5rem) 0 0;background:linear-gradient(90deg, transparent, var(--line-strong) 15%, var(--line-strong) 85%, transparent);}
+.decision-grid{display:grid;grid-template-columns:1fr;gap:clamp(2rem,5vw,3.5rem);margin-top:clamp(3rem,6vw,4.5rem);}
+@media(min-width:900px){.decision-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;}}
+.decision-copy{min-width:0;}
+.decision-note{margin-top:1.4rem;font-size:.86rem;color:var(--ink-faint);max-width:56ch;}
 
-.dash-caption{margin-top:1.5rem;font-size:1.05rem;color:var(--ink-muted);max-width:46ch;margin-left:auto;margin-right:auto;}
+/* Mockup de conversa: demonstração visual, não é um chat funcional */
+.ai-chat{position:relative;min-width:0;background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column;}
+.ai-chat-head{display:flex;align-items:center;gap:.5rem .6rem;flex-wrap:wrap;padding:.95rem 1.1rem;border-bottom:1px solid var(--line);background:var(--bg-deep);}
+.ai-chat-head-main{display:flex;align-items:center;gap:.6rem;min-width:0;flex:1 1 auto;}
+.ai-chat-icon{color:var(--gold-deep);flex-shrink:0;display:inline-flex;}
+.ai-chat-title{flex:1;min-width:0;font-size:.92rem;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ai-chat-badges{display:flex;gap:.4rem;flex-shrink:0;flex-wrap:wrap;}
+.ai-chat-badge{font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:.28rem .6rem;border-radius:100px;background:var(--bg-subtle);border:1px solid var(--line-strong);color:var(--ink-faint);white-space:nowrap;}
+.ai-chat-badge.is-accent{color:var(--gold-deep);background:var(--gold-soft);border-color:var(--gold-line);}
+.ai-chat-body{padding:1.15rem 1.1rem;display:flex;flex-direction:column;gap:.85rem;}
+.ai-msg{max-width:88%;}
+.ai-msg-user{align-self:flex-end;background:var(--ink);color:var(--bg);padding:.7rem .95rem;border-radius:var(--r-md) var(--r-md) .35rem var(--r-md);}
+.ai-msg-user p{font-size:.92rem;line-height:1.5;color:inherit;}
 
-/* ===================== TRANSFORMATION ===================== */
-.transform-grid{display:grid;grid-template-columns:1fr;gap:1.3rem;margin-top:3rem;align-items:stretch;}
-@media(min-width:840px){.transform-grid{grid-template-columns:1fr auto 1fr;}}
-.transform-col{padding:2rem 1.9rem;border-radius:var(--r-md);display:flex;flex-direction:column;gap:1.1rem;}
-.transform-col.before{background:var(--bg-deep);border:1px solid var(--line);}
-.transform-col.after{background:linear-gradient(155deg, var(--gold-soft), var(--bg-subtle) 75%);border:1px solid var(--gold-line);}
-.transform-col .tag{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;}
-.transform-col.before .tag{color:var(--ink-faint);}
-.transform-col.after .tag{color:var(--gold-deep);}
-.transform-item{display:flex;gap:.7rem;font-size:1rem;align-items:flex-start;}
-.transform-item .mk{flex-shrink:0;margin-top:.15rem;}
-.transform-col.before .mk{color:var(--ink-faint);}
-.transform-col.after .mk{color:var(--gold-deep);}
-.transform-arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);}
-@media(max-width:839px){.transform-arrow{transform:rotate(90deg);padding:.5rem 0;}}
+/* Resposta da IA: avatar + balão, com indicador de digitação antes da resposta */
+.ai-msg-bot{align-self:flex-start;max-width:100%;width:100%;display:flex;align-items:flex-start;gap:.6rem;}
+.ai-avatar{flex-shrink:0;width:2rem;height:2rem;border-radius:50%;background:var(--gold-soft);border:1px solid var(--gold-line);color:var(--gold-deep);display:flex;align-items:center;justify-content:center;}
+.ai-bubble{flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md) var(--r-md) var(--r-md) .35rem;padding:.95rem 1.1rem;box-shadow:var(--shadow-sm);}
+.ai-typing{display:flex;align-items:center;gap:.32rem;height:20px;overflow:hidden;transition:height .01ms;}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--gold-deep);opacity:.45;}
+.ai-chat.in .ai-typing{animation:ai-typing-out .3s ease-out 1.15s forwards;}
+.ai-chat.in .ai-typing span{animation:ai-typing-bounce .6s ease-in-out infinite;}
+.ai-chat.in .ai-typing span:nth-child(2){animation-delay:.12s;}
+.ai-chat.in .ai-typing span:nth-child(3){animation-delay:.24s;}
+@keyframes ai-typing-bounce{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-4px);opacity:1;}}
+@keyframes ai-typing-out{to{height:0;opacity:0;}}
+.ai-response{display:flex;flex-direction:column;gap:.9rem;opacity:0;transform:translateY(6px);max-height:0;overflow:hidden;}
+.ai-chat.in .ai-response{animation:ai-response-in .6s cubic-bezier(.16,1,.3,1) 1.15s forwards;}
+@keyframes ai-response-in{to{opacity:1;transform:translateY(0);max-height:900px;}}
+.ai-response>p{font-size:.94rem;line-height:1.55;color:var(--ink);}
+.ai-msg-block{background:var(--bg-subtle);border:1px solid var(--line);border-radius:var(--r-sm);padding:.85rem .95rem;}
+.ai-msg-block .k{display:block;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.35rem;}
+.ai-msg-block p{font-size:.88rem;color:var(--ink-muted);line-height:1.5;}
+.ai-msg-source-label{display:block;font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.5rem;}
+.ai-chips{display:flex;flex-wrap:wrap;gap:.4rem;}
+.ai-chip{font-family:"Geist Mono",monospace;font-size:.68rem;color:var(--ink-muted);background:var(--bg-subtle);border:1px solid var(--line);border-radius:100px;padding:.28rem .68rem;}
+@media (prefers-reduced-motion:reduce){
+  .ai-typing{display:none;}
+  .ai-response{opacity:1;transform:none;animation:none;max-height:none;overflow:visible;}
+}
 
-/* ===================== FINAL CTA (bloco fixo, sempre escuro) ===================== */
-.final-cta{background:var(--void-bg);color:var(--void-ink);text-align:center;position:relative;overflow:hidden;}
-.final-cta .eyebrow{color:var(--void-gold-bright);}
-.final-cta .eyebrow::before{background:var(--void-gold-bright);}
-.final-cta .wrap-narrow{position:relative;z-index:1;}
-.final-lines{display:flex;flex-direction:column;gap:.3rem;margin:2.1rem 0 2.5rem;}
+/* ===================== CATEGORIAS (acordeões) ===================== */
+.cat-list{display:flex;flex-direction:column;gap:.9rem;margin-top:1.6rem;}
+.cat-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;transition:border-color .3s, box-shadow .3s;}
+.cat-card:hover{border-color:var(--line-strong);box-shadow:var(--shadow-sm);}
+.cat-head{display:flex;align-items:center;gap:1.1rem;padding:1.2rem 1.4rem;cursor:pointer;list-style:none;}
+.cat-head::-webkit-details-marker{display:none;}
+.cat-icon{width:2.5rem;height:2.5rem;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--gold-soft);color:var(--gold-deep);}
+.cat-titles{flex:1;display:flex;flex-direction:column;gap:.15rem;min-width:0;}
+.cat-titles h3{font-size:1.05rem;}
+.cat-titles .cat-sub{font-size:.85rem;color:var(--ink-muted);}
+.cat-titles .count{font-size:.78rem;color:var(--ink-faint);font-family:"Geist Mono",monospace;}
+.cat-chev{color:var(--ink-faint);transition:transform .3s;flex-shrink:0;}
+details[open] .cat-chev{transform:rotate(180deg);}
+.cat-body{padding:0 1.4rem 1.3rem;border-top:1px solid var(--line);padding-top:1.05rem;}
+.cat-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:.45rem 1.2rem;}
+.cat-item{display:flex;gap:.55rem;padding:.3rem 0;font-size:.92rem;align-items:flex-start;}
+.cat-item .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:.55em;flex-shrink:0;}
+.cat-item b{font-weight:600;color:var(--ink);}
+.cat-item span.d{color:var(--ink-muted);}
+.cat-foot{margin-top:1.6rem;font-size:.85rem;color:var(--ink-faint);max-width:70ch;}
+
+/* ===================== DÚVIDAS (FAQ) ===================== */
+.faq-groups{margin-top:2.4rem;}
+.faq-group-label{display:block;margin-top:2.3rem;margin-bottom:.9rem;font-size:.74rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);}
+.faq-groups>.faq-group-label:first-child{margin-top:0;}
+.faq-list{display:flex;flex-direction:column;gap:.8rem;}
+.faq-item{border:1px solid var(--line);border-radius:var(--r-md);background:color-mix(in srgb,var(--surface) 88%,var(--bg-subtle));overflow:hidden;transition:border-color .25s,box-shadow .25s;}
+.faq-item:hover{border-color:var(--line-strong);box-shadow:var(--shadow-sm);}
+.faq-summary{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.4rem;cursor:pointer;list-style:none;font-weight:600;font-size:1.02rem;color:var(--ink);}
+.faq-summary::-webkit-details-marker{display:none;}
+.faq-summary .chev{margin-left:auto;color:var(--ink-faint);transition:transform .3s;flex-shrink:0;}
+details[open] .faq-summary .chev{transform:rotate(180deg);}
+.faq-answer{padding:0 1.4rem 1.3rem;color:var(--ink-muted);font-size:1rem;max-width:70ch;}
+
+/* ===================== CTA FINAL ===================== */
+.final-cta{background:radial-gradient(110% 100% at 50% -30%,#29241b 0%,var(--void-bg) 56%);border-block:1px solid var(--void-line);text-align:center;position:relative;overflow:hidden;}
+.final-cta h2{color:var(--void-ink);font-size:clamp(1.85rem,1rem + 3.4vw,3rem);}
+.final-support{margin-top:1.1rem;color:var(--void-muted);font-size:1.08rem;max-width:52ch;margin-inline:auto;}
+.final-actions{margin-top:2.3rem;display:flex;align-items:center;justify-content:center;gap:.85rem;flex-wrap:wrap;}
+.final-divider{width:56px;height:1px;background:var(--void-line);margin:3.2rem auto 0;}
+.final-cta .final-lines{display:flex;flex-direction:column;align-items:center;gap:.35rem;margin:1.9rem 0 0;}
 .final-lines span{font-family:"Geist",sans-serif;font-weight:600;letter-spacing:-0.02em;line-height:1.25;}
-.final-lines span:nth-child(1){font-size:clamp(1.25rem,2.6vw,1.7rem);color:var(--void-faint);}
-.final-lines span:nth-child(2){font-size:clamp(1.45rem,3vw,2rem);color:var(--void-muted);}
-.final-lines span:nth-child(3){font-size:clamp(1.7rem,4vw,2.5rem);color:var(--void-gold-bright);}
-.final-cta h2{color:var(--void-ink);font-size:clamp(1.9rem,4.4vw,3.1rem);}
-.final-actions{display:flex;align-items:center;justify-content:center;gap:.85rem;flex-wrap:wrap;}
-.btn-demo{background:rgba(255,255,255,.04);color:var(--void-ink);border-color:var(--void-line);}
-.btn-demo:hover{transform:translateY(-2px);border-color:var(--void-gold);color:var(--void-gold-bright);background:rgba(255,255,255,.07);}
+.final-lines span:nth-child(1){font-size:clamp(1.2rem,2.4vw,1.6rem);color:var(--void-faint);}
+.final-lines span:nth-child(2){font-size:clamp(1.4rem,2.8vw,1.9rem);color:var(--void-muted);}
+.final-lines span:nth-child(3){font-size:clamp(1.65rem,3.6vw,2.4rem);color:var(--void-gold-bright);font-weight:700;}
 
-/* ===================== FOOTER (bloco fixo, sempre escuro) ===================== */
-footer{padding:3rem 0;background:var(--void-bg);}
-.footer-row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;border-top:1px solid var(--void-line);padding-top:2rem;color:var(--void-muted);font-size:.85rem;}
-.footer-brand{display:flex;align-items:center;gap:.5rem;color:var(--void-ink);font-weight:600;}
-.footer-brand .dot{width:7px;height:7px;border-radius:2px;background:var(--void-gold);}
+/* ===================== RODAPÉ ===================== */
+footer{padding:3rem 0;background:var(--bg-deep);border-top:1px solid var(--line-strong);}
+.footer-row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:2rem;color:var(--ink-muted);font-size:.85rem;}
+.footer-brand{display:flex;align-items:center;gap:.5rem;color:var(--ink);font-weight:600;}
+.footer-brand .dot{width:7px;height:7px;border-radius:2px;background:var(--gold);}
+.footer-note{margin-top:1.2rem;font-size:.78rem;color:var(--ink-faint);max-width:70ch;}
 
-/* ===================== RESPONSIVO ===================== */
+/* ===================== AJUSTES RESPONSIVOS PONTUAIS ===================== */
 @media(max-width:640px){
-  .section{padding:3.25rem 0;}
-  .hero{padding-top:6.5rem;padding-bottom:2.5rem;}
-  .hero-actions{width:100%;}
-  .dash-body{padding:1rem;gap:1.1rem;}
+  .hero-actions .btn{flex:1 1 auto;}
   .dash-kpis{grid-template-columns:repeat(2,1fr);gap:.7rem;}
   .kpi{padding:.85rem .95rem;}
   .kpi .value{font-size:1.25rem;}
   .cat-items{grid-template-columns:1fr;}
   .cat-head{padding:1.05rem 1.15rem;gap:.85rem;}
   .cat-body{padding:0 1.15rem 1.1rem;}
-  .dash-ai-msg{max-width:100%;}
-  .transform-col{padding:1.6rem 1.5rem;}
+  .dash-tag .txt-long{display:none;}
+  .final-actions .btn{width:100%;}
 }
 @media(max-width:420px){
   .nav{padding:.9rem 1rem;}
   .nav-cta{padding:.55rem .9rem;font-size:.8rem;}
   .nav-cta .txt{display:none;}
-  .dash-topbar .url{font-size:.68rem;padding:.3rem .7rem;}
-  .cost-row{grid-template-columns:1.8rem 1fr;}
-}
-@media(max-width:600px){
-  .how-step{grid-template-columns:2.8rem 1fr;}
-  .how-num{width:2.8rem;height:2.8rem;font-size:.88rem;}
-  .how-step:not(:last-child)::after{left:1.4rem;}
 }
 </style>
 </head>
 <body>
 
-<nav class="nav" id="siteNav">
+<nav class="nav" id="siteNav" aria-label="Navegação principal">
   <a href="#top" class="nav-brand"><span class="dot"></span>Inteligência Comercial</a>
-  <a href="#contato" class="nav-cta">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.53 2 12.04 2zm0 18.2c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.37c0-4.53 3.69-8.22 8.22-8.22 4.53 0 8.22 3.69 8.22 8.22s-3.7 8.24-8.14 8.24zm4.5-6.13c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.65.81-.79.97-.15.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.22-1.46-1.37-1.7-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
-    <span class="txt">Falar no WhatsApp</span>
+  <a href="./demonstracao/index.html" class="nav-cta" target="_blank" rel="noopener">
+    <span class="txt">Ver demonstração</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </a>
 </nav>
 
@@ -372,235 +455,303 @@ footer{padding:3rem 0;background:var(--void-bg);}
       <div class="hero-grid">
         <div class="hero-copy reveal in">
           <span class="eyebrow">Inteligência Comercial para Sites</span>
-          <h1 style="margin-top:1.1rem;">Você sabe o que <em>desperta interesse</em>, aproxima uma decisão ou faz alguém ir embora do seu site?</h1>
-          <p class="hero-sub">Mesmo quando a venda acontece fora do site, cada visita deixa sinais sobre os serviços, produtos, conteúdos e argumentos que mais chamam atenção. Nós transformamos esses sinais em dados claros para orientar marketing e vendas.</p>
+          <h1>Descubra o que acontece no seu site <em>depois do clique</em>.</h1>
+          <p class="hero-sub">Entenda como as pessoas navegam no seu site: de onde vieram, no que clicaram, quais páginas despertam interesse e quais ações indicam uma possível oportunidade. Você define o que acompanhar e vê tudo em um só lugar.</p>
           <div class="hero-actions">
-            <a href="#problema" class="hero-cue">
-              <span>Ver como funciona</span>
-              <svg class="hero-cue-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M5 12l7 7 7-7"/></svg>
+            <a href="#problema" class="btn btn-primary">
+              Ver como funciona
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
+          <p class="hero-reassure">Sem mudar o visual do seu site. Você escolhe o que faz sentido acompanhar.</p>
         </div>
         <div class="hero-visual reveal reveal-delay-2 in" aria-hidden="true">
           <canvas id="heroCanvas"></canvas>
-          <div class="legend"><span>atividade recente no site</span><span><b>·</b> cada ponto é uma pessoa</span></div>
+          <div class="legend"><span>atividade recente no site</span><span><b>·</b> cada ponto é uma visita</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ 2. O PROBLEMA ============ -->
+  <!-- ============ 2. O QUE VOCÊ VAI ENXERGAR ============ -->
   <section class="section" id="problema">
     <div class="wrap">
-      <div class="reveal in">
-        <span class="eyebrow">O ponto cego</span>
-        <h2 style="margin-top:1rem;font-size:clamp(1.7rem,3.6vw,2.6rem);">Trazer visitas é a metade resolvida. A outra metade é entender o que elas fazem depois de entrar.</h2>
-        <p class="section-lede">Anúncios, Google Ads, SEO para aparecer bem nas buscas, um site bem feito. A maior parte das empresas já investe em tudo isso. O que ainda falta é responder o básico:</p>
+      <div class="section-head reveal in measure">
+        <span class="eyebrow">O que você vai enxergar</span>
+        <h2 style="font-size:var(--h2-lg);">Seu site já recebe visitas. Agora imagine entender o que desperta o interesse delas.</h2>
+        <p class="section-lede measure">Cada visita deixa sinais: de onde a pessoa veio, por onde navegou, o que chamou atenção e em que momento ela avançou ou perdeu o interesse. Com esses indicadores, você entende o que realmente prende a atenção do seu público e usa isso para melhorar a conversão no seu site, ajustar campanhas e posicionar melhor suas ofertas.</p>
       </div>
       <div class="q-grid">
+        <!-- Origem que gera interesse: ícone megafone -->
         <div class="q-card reveal">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
-          <p>Por que essa pessoa foi embora?</p>
+          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14V8a2 2 0 0 1 2-2h4l7-3.2v14.4L10 14H6a2 2 0 0 1-2-2z"/><path d="M15 8.5a3 3 0 0 1 0 5"/></svg>
+          <div class="q-text">
+            <h3>Origem que gera interesse</h3>
+            <p>Veja quais canais trazem visitas mais envolvidas para o seu site.</p>
+          </div>
         </div>
+        <!-- Páginas que mais prendem atenção: ícone cubo -->
         <div class="q-card reveal reveal-delay-1">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.8-6.5 9.5-6.5S21.5 12 21.5 12s-3.8 6.5-9.5 6.5S2.5 12 2.5 12z"/></svg>
-          <p>Qual serviço chama mais atenção?</p>
+          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+          <div class="q-text">
+            <h3>Páginas que mais prendem atenção</h3>
+            <p>Entenda quais conteúdos, serviços ou produtos despertam mais interesse.</p>
+          </div>
         </div>
+        <!-- Caminhos de navegação: ícone pessoa -->
         <div class="q-card reveal reveal-delay-2">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
-          <p>Qual produto, projeto ou oferta é mais explorado?</p>
+          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
+          <div class="q-text">
+            <h3>Caminhos de navegação</h3>
+            <p>Acompanhe por onde as pessoas passam antes de tomar uma decisão.</p>
+          </div>
         </div>
-        <div class="q-card reveal reveal-delay-3">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
-          <p>Quais conteúdos ajudam a criar confiança?</p>
-        </div>
+        <!-- Sinais de intenção: ícone escudo/check -->
         <div class="q-card reveal">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-          <p>Qual página ajuda o visitante a continuar?</p>
+          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div class="q-text">
+            <h3>Sinais de intenção</h3>
+            <p>Identifique cliques e ações que podem indicar uma oportunidade comercial.</p>
+          </div>
         </div>
+        <!-- Pontos de perda de interesse: ícone seta descendente -->
         <div class="q-card reveal reveal-delay-1">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l5 5 3-3 8 8"/><path d="M20 11v6h-6"/></svg>
-          <p>Onde o interesse diminui?</p>
+          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l5 5 3-3 8 8"/><path d="M20 11v6h-6"/></svg>
+          <div class="q-text">
+            <h3>Pontos de perda de interesse</h3>
+            <p>Perceba em quais etapas as pessoas tendem a deixar a navegação.</p>
+          </div>
         </div>
+        <!-- Interesses ainda não atendidos: ícone alvo -->
         <div class="q-card reveal reveal-delay-2">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14V8a2 2 0 0 1 2-2h4l7-3.2v14.4L10 14H6a2 2 0 0 1-2-2z"/><path d="M15 8.5a3 3 0 0 1 0 5"/></svg>
-          <p>Qual canal traz visitantes mais envolvidos?</p>
+          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+          <div class="q-text">
+            <h3>Interesses ainda não atendidos</h3>
+            <p>Descubra o que seu público procura e talvez ainda não encontre com facilidade.</p>
+          </div>
         </div>
-        <div class="q-card reveal reveal-delay-3">
-          <svg class="icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
-          <p>O que seu público mais procura e ainda aparece pouco?</p>
-        </div>
       </div>
-      <p class="section-close reveal">Sem essas respostas, marketing e site trabalham sem o retorno do que acontece depois do clique.</p>
     </div>
   </section>
 
-  <!-- ============ 3. NEM TODA VENDA ACONTECE NO SITE ============ -->
-  <section class="section alt" id="jornada">
-    <div class="wrap-narrow center">
-      <div class="reveal in">
-        <span class="eyebrow">Além da conversão direta</span>
-        <h2 style="margin-top:1rem;">Nem toda venda acontece no site. Mas muitas decisões passam por ele.</h2>
-        <p class="section-lede" style="margin-left:auto;margin-right:auto;">Em muitos negócios, o contato final acontece por telefone, em loja ou por indicação. Antes disso, porém, o site costuma ser o lugar onde a decisão amadurece.</p>
-      </div>
-      <div class="journey-flow reveal in">
-        <span class="journey-step">Conhece a empresa</span>
-        <svg class="journey-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        <span class="journey-step">Visita o site</span>
-        <svg class="journey-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        <span class="journey-step">Explora ofertas e diferenciais</span>
-        <svg class="journey-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        <span class="journey-step">Cria confiança</span>
-        <svg class="journey-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        <span class="journey-step">Entra em contato ou avança na decisão</span>
-      </div>
-      <p class="section-close reveal center" style="margin-left:auto;margin-right:auto;">O site não precisa concluir a venda para fornecer informações valiosas sobre ela.</p>
-    </div>
-  </section>
-
-  <!-- ============ 4. O CUSTO DE NÃO SABER ============ -->
-  <section class="section cost-section" id="custo">
-    <div class="wrap-narrow">
-      <div class="reveal in">
-        <span class="eyebrow">O custo de não saber</span>
-        <h2 style="margin-top:1rem;">Você sabe quantas pessoas chegaram. O que elas fizeram depois, ninguém registrou.</h2>
-      </div>
-      <div class="cost-list">
-        <div class="cost-row reveal"><span class="mark">01</span><p>Você <b>paga por clique</b>. Mas não sabe o que a pessoa fez depois de clicar.</p></div>
-        <div class="cost-row reveal reveal-delay-1"><span class="mark">02</span><p>Você <b>paga por anúncio</b>. Mas não sabe qual anúncio realmente gera contato identificado, e qual merece um ajuste.</p></div>
-        <div class="cost-row reveal reveal-delay-2"><span class="mark">03</span><p>Você <b>muda o site no feeling</b>. Mas não sabe se aquilo ajudou ou afastou quem visita.</p></div>
-        <div class="cost-row reveal reveal-delay-3"><span class="mark">04</span><p>Cada visitante que sai sem avançar na jornada carrega uma resposta que <b>você nunca vai ouvir</b>, porque ninguém está registrando.</p></div>
-        <div class="cost-row reveal reveal-delay-4"><span class="mark">05</span><p>Você pode estar <b>cortando a campanha certa</b>, quando o site é que não acompanha o que o seu público anda procurando.</p></div>
-      </div>
-      <p class="cost-final reveal">Não é falta de visitantes. É falta de visibilidade.</p>
-    </div>
-  </section>
-
-  <!-- ============ 4. IMAGINE SE... ============ -->
-  <section class="section" id="imagine">
+  <!-- ============ 3. COMPORTAMENTO QUE VIRA SINAL ============ -->
+  <section class="section alt" id="comportamento">
     <div class="wrap">
-      <div class="reveal in center" style="margin:0 auto;max-width:640px;">
-        <span class="eyebrow">A visão</span>
-        <h2 style="margin-top:1rem;">Seu site reúne sinais sobre o que desperta interesse no seu público. Agora imagine simplesmente <em style="color:var(--gold-deep);font-style:normal;">saber</em> quais são.</h2>
-        <p class="section-lede" style="margin-left:auto;margin-right:auto;">Sinais de interesse são padrões observados em ações como páginas visitadas, serviços explorados, tempo de atenção, cliques, retornos, downloads e caminhos de navegação.</p>
+      <div class="behavior-grid">
+
+        <!-- Coluna esquerda: texto -->
+        <div class="section-head behavior-copy reveal in">
+          <span class="eyebrow">Comportamento que vira sinal</span>
+          <h2>Enquanto uma pessoa decide, seu site já revela sinais importantes.</h2>
+          <p class="section-lede measure">Nem toda decisão termina em uma compra ou contato imediato. Muitas pessoas pesquisam, comparam, voltam depois e constroem confiança antes de avançar.</p>
+          <p class="section-lede measure">Cada interação ajuda você a entender o que chama atenção, o que aproxima alguém de uma decisão e onde o interesse pode estar se perdendo.</p>
+        </div>
+
+        <!-- Coluna direita: quatro microinterações (grade 2x2) -->
+        <div class="scenes">
+
+          <!-- Cena 1: chega por uma campanha -->
+          <div class="scene scene--source reveal">
+            <span class="scene-title">Chega por uma campanha</span>
+            <div class="scene-stage" aria-hidden="true">
+              <div class="mini-bar">
+                <i></i><i></i><i></i>
+                <span class="origin-chip">Campanha</span>
+              </div>
+              <div class="mini-body">
+                <span class="load-bar"><span class="load-fill"></span></span>
+                <span class="ln w60"></span>
+                <span class="ln w90"></span>
+                <span class="ln w45"></span>
+              </div>
+            </div>
+            <span class="scene-signal"><span class="scene-dot"></span>Origem identificada</span>
+          </div>
+
+          <!-- Cena 2: explora uma oferta -->
+          <div class="scene scene--offer reveal reveal-delay-1">
+            <span class="scene-title">Explora uma oferta</span>
+            <div class="scene-stage" aria-hidden="true">
+              <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url"></span></div>
+              <div class="mini-body">
+                <div class="offer-track">
+                  <div class="offer-card"></div>
+                  <div class="offer-card is-focus"></div>
+                  <div class="offer-card"></div>
+                </div>
+                <svg class="cursor cursor-2" width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2 4 18 8.6 13.6 11.6 20 13.9 19 11 12.8 17.2 12.8Z"/></svg>
+              </div>
+            </div>
+            <span class="scene-signal"><span class="scene-dot"></span>Interesse em oferta</span>
+          </div>
+
+          <!-- Cena 3: busca mais confiança -->
+          <div class="scene scene--trust reveal reveal-delay-2">
+            <span class="scene-title">Busca mais confiança</span>
+            <div class="scene-stage" aria-hidden="true">
+              <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url"></span></div>
+              <div class="mini-body">
+                <div class="trust-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span class="dim">★</span></div>
+                <div class="faq-row is-open">
+                  <div class="faq-q"><span class="faq-ln"></span><span class="faq-pm">+</span></div>
+                  <div class="faq-a"><span class="ln w90"></span><span class="ln w55"></span></div>
+                </div>
+                <div class="faq-row">
+                  <div class="faq-q"><span class="faq-ln short"></span><span class="faq-pm">+</span></div>
+                </div>
+              </div>
+            </div>
+            <span class="scene-signal"><span class="scene-dot"></span>Conteúdo consultado</span>
+          </div>
+
+          <!-- Cena 4: demonstra intenção -->
+          <div class="scene scene--intent reveal reveal-delay-3">
+            <span class="scene-title">Demonstra intenção</span>
+            <div class="scene-stage" aria-hidden="true">
+              <div class="mini-bar"><i></i><i></i><i></i><span class="mini-url"></span></div>
+              <div class="mini-body intent-body">
+                <span class="ln w70"></span>
+                <span class="cta-btn cta-main">Solicitar orçamento</span>
+                <span class="cta-btn ghost">Falar no WhatsApp</span>
+                <svg class="cursor cursor-4" width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2 4 18 8.6 13.6 11.6 20 13.9 19 11 12.8 17.2 12.8Z"/></svg>
+              </div>
+            </div>
+            <span class="scene-signal"><span class="scene-dot"></span>Ação relevante</span>
+          </div>
+
+        </div>
       </div>
-      <div class="vision-grid">
-        <div class="vision-card reveal">
-          <span class="num">Imagine saber:</span>
-          <p>quantas pessoas visitaram seu site hoje e quantas realizaram uma ação importante.</p>
-        </div>
-        <div class="vision-card reveal reveal-delay-1">
-          <span class="num">Imagine saber:</span>
-          <p>se o ajuste está na campanha, no site, ou nos dois.</p>
-        </div>
-        <div class="vision-card reveal reveal-delay-2">
-          <span class="num">Imagine ver:</span>
-          <p>com clareza, em que trechos do site o interesse costuma cair.</p>
-        </div>
-        <div class="vision-card reveal reveal-delay-3">
-          <span class="num">Imagine decidir:</span>
-          <p>o próximo passo do seu negócio com o comportamento real do seu público na mão.</p>
-        </div>
-      </div>
-      <p class="section-close reveal center" style="margin-left:auto;margin-right:auto;">Essa clareza tem nome: <b>Inteligência Comercial para Sites</b>.</p>
     </div>
   </section>
 
-  <!-- ============ 5. COMO FUNCIONA ============ -->
-  <section class="section alt" id="como-funciona">
-    <div class="wrap-narrow center">
-      <div class="reveal in">
-        <span class="eyebrow">Simples de entender</span>
-        <h2 style="margin-top:1rem;">Como funciona, em quatro passos.</h2>
-      </div>
-    </div>
-    <div class="how-list">
-      <div class="how-step reveal">
-        <div class="how-num">01</div>
-        <div class="how-body"><h3>Instalamos uma camada de inteligência no seu site</h3><p>Nada muda visualmente. Seu site continua exatamente como é.</p></div>
-      </div>
-      <div class="how-step reveal reveal-delay-1">
-        <div class="how-num">02</div>
-        <div class="how-body"><h3>Seus visitantes passam a ser compreendidos</h3><p>Cada visita, clique e movimento passa a gerar entendimento sobre o comportamento real de quem chega até você.</p></div>
-      </div>
-      <div class="how-step reveal reveal-delay-2">
-        <div class="how-num">03</div>
-        <div class="how-body"><h3>As informações são organizadas automaticamente</h3><p>Elas se transformam em um painel exclusivo, feito para o seu negócio, sem planilha e sem trabalho manual.</p></div>
-      </div>
-      <div class="how-step reveal reveal-delay-3">
-        <div class="how-num">04</div>
-        <div class="how-body"><h3>Você decide com muito mais segurança</h3><p>Marketing, vendas e site passam a ser guiados por comportamento real, todos os dias.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ EXTRA: IA analisando os dados ============ -->
-  <section class="extra-band">
-    <div class="wrap-narrow center">
-      <span class="extra-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
-        Inteligência Artificial
-      </span>
-      <span class="extra-note">Opcional</span>
-      <h2 class="reveal in">Quer ir além? A Inteligência Artificial ajuda a ler os sinais.</h2>
-      <p class="section-lede reveal in" style="margin-left:auto;margin-right:auto;">Para quem quiser um nível a mais de profundidade, uma IA pode analisar métricas agregadas e apontar hipóteses em linguagem simples, sempre com revisão humana antes de qualquer publicação. É um serviço opcional, à parte do pacote padrão, disponível mediante consulta.</p>
-    </div>
-  </section>
-
-  <!-- ============ 6. O QUE VOCÊ PODERÁ ACOMPANHAR ============ -->
-  <section class="section" id="acompanhar">
+  <!-- ============ 4. PAINEL E PRÓXIMA DECISÃO ============ -->
+  <section class="section">
     <div class="wrap">
-      <div class="reveal in" style="max-width:640px;">
+
+      <!-- Momento 1: o painel de acompanhamento -->
+      <div class="section-head reveal in center" style="max-width:960px;margin-inline:auto;">
+        <span class="eyebrow" style="justify-content:center;">Os sinais, organizados</span>
+        <h2 style="font-size:var(--h2-lg);">Tudo o que acontece no seu site, organizado para você decidir melhor.</h2>
+        <p class="section-lede measure" style="margin-inline:auto;">Em um só painel, você acompanha as visitas, as ações relevantes, os canais que geram mais interesse e os conteúdos ou ofertas que mais despertam atenção. Assim, fica mais fácil melhorar a conversão no seu site, ajustar campanhas e posicionar melhor suas ofertas.</p>
+      </div>
+
+      <figure class="dash-figure reveal" id="painel">
+        <div class="dash-frame">
+          <div class="dash-topbar">
+            <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+            <span class="title">Painel de acompanhamento</span>
+            <span class="dash-tag"><span class="txt-long">Exemplo&nbsp;</span>ilustrativo</span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-kpis">
+              <div class="kpi"><span class="label">Visitantes no período</span><span class="value" data-count="342">0</span><span class="delta up">↑ 12% vs. período anterior</span></div>
+              <div class="kpi"><span class="label">Ações importantes registradas</span><span class="value" data-count="18">0</span><span class="delta up">↑ 4 no período</span></div>
+              <div class="kpi"><span class="label">Cliques para contato</span><span class="value" data-count="27">0</span><span class="delta">no período</span></div>
+              <div class="kpi"><span class="label">Serviço com mais interesse</span><span class="value" style="font-size:1.05rem;">Consultoria</span><span class="delta">42% dos cliques em serviços</span></div>
+            </div>
+            <div class="dash-main">
+              <div class="dash-panel">
+                <h4>Visitantes nos últimos 14 dias</h4>
+                <div class="chart-wrap"><canvas id="dashChart" aria-hidden="true"></canvas></div>
+              </div>
+              <div class="dash-panel">
+                <h4>Canais com mais visitantes engajados</h4>
+                <div class="source-row"><span class="name">Google Ads</span><div class="bar-track"><div class="bar-fill" data-w="42"></div></div><span class="pct">42%</span></div>
+                <div class="source-row"><span class="name">Instagram</span><div class="bar-track"><div class="bar-fill" data-w="28"></div></div><span class="pct">28%</span></div>
+                <div class="source-row"><span class="name">Indicação</span><div class="bar-track"><div class="bar-fill" data-w="18"></div></div><span class="pct">18%</span></div>
+                <div class="source-row"><span class="name">Direto</span><div class="bar-track"><div class="bar-fill" data-w="12"></div></div><span class="pct">12%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="dash-figcaption"><b>Exemplo ilustrativo.</b> Os números são simulados e servem para mostrar o formato do painel. Os indicadores reais são definidos conforme o seu site, as fontes disponíveis e o que você decide acompanhar.</figcaption>
+      </figure>
+
+      <!-- Divisor sutil entre os dois momentos -->
+      <div class="decision-divider" aria-hidden="true"></div>
+
+      <!-- Momento 2: análise com IA, recurso opcional -->
+      <div class="decision-grid">
+        <div class="section-head decision-copy reveal">
+          <span class="eyebrow">Análise com IA · Opcional</span>
+          <h2>Uma IA para ajudar você a transformar dados em próximos passos.</h2>
+          <p class="section-lede measure">Como recurso opcional, ela analisa os indicadores que você decidiu acompanhar e ajuda a explorar mudanças, padrões e oportunidades. Você pode pedir uma leitura do período, comparar canais ou investigar o interesse por uma oferta, sempre com base nos dados disponíveis.</p>
+          <p class="decision-note">Contratado à parte. A IA trabalha com métricas agregadas para destacar hipóteses e sugestões que devem ser avaliadas por você. Escopo e frequência das análises são definidos na contratação.</p>
+        </div>
+
+        <div class="ai-chat reveal reveal-delay-1" role="group" aria-label="Exemplo ilustrativo de conversa com o assistente de análise, recurso opcional">
+          <div class="ai-chat-head">
+            <div class="ai-chat-head-main">
+              <span class="ai-chat-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg></span>
+              <span class="ai-chat-title">Assistente de análise</span>
+            </div>
+            <span class="ai-chat-badges">
+              <span class="ai-chat-badge">Exemplo ilustrativo</span>
+              <span class="ai-chat-badge is-accent">Opcional</span>
+            </span>
+          </div>
+          <div class="ai-chat-body">
+            <div class="ai-msg ai-msg-user"><p>O que vale revisar na página de Consultoria?</p></div>
+            <div class="ai-msg ai-msg-bot">
+              <span class="ai-avatar" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg></span>
+              <div class="ai-bubble">
+                <div class="ai-typing" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="ai-response">
+                  <p>Os cliques em Consultoria cresceram entre as visitas vindas do Google Ads. Parte dessas pessoas também visitou a página de cases antes de realizar uma ação relevante.</p>
+                  <div class="ai-msg-block">
+                    <span class="k">Hipótese para avaliar</span>
+                    <p>A proximidade entre os cases e o botão de orçamento pode ajudar quem está buscando mais confiança antes de avançar.</p>
+                  </div>
+                  <div class="ai-msg-block">
+                    <span class="k">Sugestão para explorar</span>
+                    <p>Teste aproximar os cases do botão de orçamento ou criar uma variação da página para essa campanha.</p>
+                  </div>
+                  <div>
+                    <span class="ai-msg-source-label">Base da leitura</span>
+                    <div class="ai-chips">
+                      <span class="ai-chip">Google Ads</span>
+                      <span class="ai-chip">Cliques em serviços</span>
+                      <span class="ai-chip">Visitas a cases</span>
+                      <span class="ai-chip">Ações relevantes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. O QUE VOCÊ PODE ACOMPANHAR ============ -->
+  <section class="section alt" id="acompanhar">
+    <div class="wrap">
+      <div class="section-head reveal in" style="max-width:660px;">
         <span class="eyebrow">Visão completa</span>
-        <h2 style="margin-top:1rem;font-size:clamp(1.7rem,3.6vw,2.6rem);">Quais dados podem ser coletados para você enxergar mais sobre o seu próprio negócio.</h2>
-        <p class="section-lede">Você escolhe o quanto quer se aprofundar. Comece pelo essencial, ou explore cada detalhe.</p>
-        <p class="section-hint">As possibilidades são definidas de acordo com o objetivo da empresa, a estrutura do site e as fontes de dados disponíveis. Você escolhe o que faz sentido acompanhar.</p>
-        <div class="cat-legend reveal in">
-          <span><span class="dot principal"></span>Estrutura principal</span>
-          <span><span class="dot integracao"></span>Integração adicional</span>
-          <span><span class="dot personalizada"></span>Configuração personalizada</span>
-        </div>
+        <h2 style="font-size:var(--h2-lg);">Veja o que você pode acompanhar.</h2>
+        <p class="section-lede measure">Explore as possibilidades e entenda quais informações podem ajudar nas decisões do seu negócio. Você escolhe os indicadores que mais fazem sentido para o seu site.</p>
       </div>
 
       <div class="cat-list">
 
         <details class="cat-card reveal">
           <summary class="cat-head">
-            <span class="cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
-            <span class="cat-titles"><h3>Visibilidade</h3><span class="count">8 indicadores</span></span>
-            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="cat-body">
-            <div class="cat-items">
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Impressões e cliques</b> <span class="d">quantas vezes você aparece e é clicado nas buscas</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Taxa de cliques</b> <span class="d">proporção de quem clica ao ver seu site nas buscas</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Posição média</b> <span class="d">em que posição você aparece nas buscas</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>O que as pessoas digitam</b> <span class="d">as buscas reais que te encontram</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Páginas indexadas</b> <span class="d">o que o Google já enxerga do seu site</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Velocidade percebida</b> <span class="d">o quão rápido seu site realmente parece</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Desempenho no celular</b> <span class="d">como o Google avalia sua versão mobile</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Alcance em anúncios</b> <span class="d">quantas pessoas viram os anúncios</span></span></div>
-            </div>
-          </div>
-        </details>
-
-        <details class="cat-card reveal">
-          <summary class="cat-head">
-            <span class="cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.8-6.5 9.5-6.5S21.5 12 21.5 12s-3.8 6.5-9.5 6.5S2.5 12 2.5 12z"/></svg></span>
-            <span class="cat-titles"><h3>Interesse</h3><span class="count">10 indicadores</span></span>
-            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <span class="cat-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12s3.8-6.5 9.5-6.5S21.5 12 21.5 12s-3.8 6.5-9.5 6.5S2.5 12 2.5 12z"/></svg></span>
+            <span class="cat-titles"><h3>Visitas e interesse</h3><span class="cat-sub">Atividade, retorno e conteúdos que despertam atenção.</span><span class="count">10 indicadores</span></span>
+            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
           <div class="cat-body">
             <div class="cat-items">
               <div class="cat-item"><span class="dot"></span><span><b>Usuários ativos</b> <span class="d">atividade recente, hoje, 7 e 28 dias</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Novos vs. recorrentes</b> <span class="d">primeira visita ou já conhecia o site</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Sessões</b> <span class="d">quantas vezes cada pessoa interage com o site</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Sessões</b> <span class="d">quantas vezes o site foi acessado no período</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Duração média</b> <span class="d">tempo de atenção gasto na página</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Páginas por sessão</b> <span class="d">quanto cada visitante navega no site</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Retenção</b> <span class="d">em quantos dias o visitante costuma voltar</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Clique por produto ou serviço</b> <span class="d">qual item do catálogo desperta mais atenção</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Abertura de detalhes</b> <span class="d">qual item desperta mais curiosidade</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Tempo por seção</b> <span class="d">onde o visitante mais se demora</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Páginas por sessão</b> <span class="d">quanto se navega em cada acesso</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Retorno</b> <span class="d">em quantos dias o visitante costuma voltar</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Clique por produto ou serviço</b> <span class="d">qual item do catálogo recebe mais atenção</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Abertura de detalhes</b> <span class="d">qual item leva a pessoa a querer saber mais</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Tempo por seção</b> <span class="d">onde as pessoas mais se demoram</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Rolagem da página</b> <span class="d">25%, 50%, 75%, quase o fim</span></span></div>
             </div>
           </div>
@@ -608,22 +759,22 @@ footer{padding:3rem 0;background:var(--void-bg);}
 
         <details class="cat-card reveal">
           <summary class="cat-head">
-            <span class="cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="4" width="4.5" height="4.5" rx="1"/><rect x="15.5" y="4" width="4.5" height="4.5" rx="1"/><rect x="4" y="9.75" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="9.75" width="4.5" height="4.5" rx="1"/><rect x="15.5" y="9.75" width="4.5" height="4.5" rx="1"/></svg></span>
-            <span class="cat-titles"><h3>Comportamento</h3><span class="count">11 indicadores</span></span>
-            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <span class="cat-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="4" width="4.5" height="4.5" rx="1"/><rect x="15.5" y="4" width="4.5" height="4.5" rx="1"/><rect x="4" y="9.75" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="9.75" width="4.5" height="4.5" rx="1"/><rect x="15.5" y="9.75" width="4.5" height="4.5" rx="1"/></svg></span>
+            <span class="cat-titles"><h3>Navegação e comportamento</h3><span class="cat-sub">Como as pessoas navegam, interagem e encontram obstáculos no site.</span><span class="count">11 indicadores</span></span>
+            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
           <div class="cat-body">
             <div class="cat-items">
               <div class="cat-item"><span class="dot"></span><span><b>Dispositivo</b> <span class="d">celular, computador ou tablet</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Navegador e sistema</b> <span class="d">de onde a visita realmente vem</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Região aproximada dos acessos</b> <span class="d">país, estado e cidade</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Mapa de cliques</b> <span class="d">onde o dedo ou o mouse realmente toca</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Mapa de rolagem</b> <span class="d">até onde as pessoas de fato descem a página</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Áreas de maior atenção</b> <span class="d">áreas em que os visitantes passam mais tempo ou interagem</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Gravação de visita</b> <span class="d">o replay real de uma navegação, sem identificar quem é</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Cliques de frustração</b> <span class="d">quando a pessoa clica várias vezes seguidas</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Cliques sem resposta</b> <span class="d">quando a pessoa clica em algo que não reage</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Saídas rápidas</b> <span class="d">quando a página não entrega o que prometeu</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Região aproximada dos acessos</b> <span class="d">país e região aproximada, sem localização exata</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Mapa de cliques</b> <span class="d">onde o dedo ou o mouse mais toca</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Mapa de rolagem</b> <span class="d">até onde as pessoas descem a página</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Áreas de maior atenção</b> <span class="d">onde os visitantes passam mais tempo ou interagem</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Gravação de visita</b> <span class="d">o replay de uma navegação, sem identificar quem é</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Cliques de frustração</b> <span class="d">quando a pessoa clica várias vezes seguidas</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Cliques sem resposta</b> <span class="d">quando se clica em algo que não reage</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Saídas rápidas</b> <span class="d">quando a visita sai logo após abrir a página</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Filtros de análise</b> <span class="d">por dispositivo, região ou ação registrada</span></span></div>
             </div>
           </div>
@@ -631,9 +782,9 @@ footer{padding:3rem 0;background:var(--void-bg);}
 
         <details class="cat-card reveal">
           <summary class="cat-head">
-            <span class="cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.8-5.2"/></svg></span>
-            <span class="cat-titles"><h3>Ações comerciais</h3><span class="count">13 indicadores</span></span>
-            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <span class="cat-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.8-5.2"/></svg></span>
+            <span class="cat-titles"><h3>Ações relevantes</h3><span class="cat-sub">Ações que podem indicar avanço na jornada comercial.</span><span class="count">13 indicadores</span></span>
+            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
           <div class="cat-body">
             <div class="cat-items">
@@ -641,14 +792,14 @@ footer{padding:3rem 0;background:var(--void-bg);}
               <div class="cat-item"><span class="dot"></span><span><b>Primeiro CTA</b> <span class="d">o botão que aparece assim que o site abre</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>CTA institucional</b> <span class="d">depois de conhecer quem está por trás</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>CTA final</b> <span class="d">o último apelo antes do rodapé</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Clique ou abertura do WhatsApp</b> <span class="d">quando o visitante inicia a conversa</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Clique para abrir o WhatsApp</b> <span class="d">quando alguém clica para abrir a conversa</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Clique para ligar</b> <span class="d">toque direto no telefone</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Clique nas redes sociais</b> <span class="d">saída para Instagram ou Facebook</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Clique em "ver no mapa"</b> <span class="d">intenção real de visitar o local</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Clique em "ver no mapa"</b> <span class="d">clique para ver o endereço no mapa</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Taxa de ações importantes</b> <span class="d">ações relevantes divididas por visitas</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Canal com mais ações importantes</b> <span class="d">qual canal gera mais ações importantes ou contatos identificados</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Caminho de navegação antes da ação registrada</b> <span class="d">as páginas visitadas até o contato</span></span></div>
-              <div class="cat-item"><span class="dot personalizada"></span><span><b>Pontos de queda dentro do funil configurado</b> <span class="d">etapas específicas definidas para o seu negócio</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Canal com mais ações importantes</b> <span class="d">qual canal gera mais ações importantes registradas</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Caminho antes da ação registrada</b> <span class="d">as páginas visitadas antes da ação</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Pontos de queda no funil configurado</b> <span class="d">etapas específicas definidas para o seu negócio</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Tempo até a ação</b> <span class="d">decisão imediata ou após explorar o site</span></span></div>
             </div>
           </div>
@@ -656,163 +807,166 @@ footer{padding:3rem 0;background:var(--void-bg);}
 
         <details class="cat-card reveal">
           <summary class="cat-head">
-            <span class="cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14V8a2 2 0 0 1 2-2h4l7-3.2v14.4L10 14H6a2 2 0 0 1-2-2z"/><path d="M15 8.5a3 3 0 0 1 0 5"/></svg></span>
-            <span class="cat-titles"><h3>Marketing e presença digital</h3><span class="count">17 indicadores</span></span>
-            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <span class="cat-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14V8a2 2 0 0 1 2-2h4l7-3.2v14.4L10 14H6a2 2 0 0 1-2-2z"/><path d="M15 8.5a3 3 0 0 1 0 5"/></svg></span>
+            <span class="cat-titles"><h3>Origem, canais e campanhas</h3><span class="cat-sub">De onde as visitas chegam e quais canais geram mais movimento.</span><span class="count">17 indicadores</span></span>
+            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
           <div class="cat-body">
             <div class="cat-items">
-              <div class="cat-item"><span class="dot"></span><span><b>Origem do visitante</b> <span class="d">de onde exatamente a pessoa veio</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Origem do visitante</b> <span class="d">de onde a pessoa veio</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Canal</b> <span class="d">orgânico, pago, direto, social ou indicação</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Campanhas</b> <span class="d">qual anúncio ou post trouxe a visita</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Campanhas</b> <span class="d">qual anúncio ou post trouxe a visita</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Busca no Google</b> <span class="d">quem chegou sem pagar anúncio</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Google Ads</b> <span class="d">tráfego vindo de campanhas pagas</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Instagram e Facebook</b> <span class="d">orgânico e pago</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Google Ads</b> <span class="d">tráfego vindo de campanhas pagas</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Instagram e Facebook</b> <span class="d">orgânico e pago</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>WhatsApp</b> <span class="d">quando o link do site é compartilhado</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Acesso direto</b> <span class="d">digitou o endereço ou já tinha salvo</span></span></div>
               <div class="cat-item"><span class="dot"></span><span><b>Indicações</b> <span class="d">links de outros sites e parceiros</span></span></div>
-              <div class="cat-item"><span class="dot"></span><span><b>Página de entrada</b> <span class="d">por onde a visita realmente começou</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Cliques e impressões por campanha</b> <span class="d">por campanha e por anúncio</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Custo por conversão</b> <span class="d">quanto custa cada ação ou contato identificado</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Ações registradas por campanha</b> <span class="d">contatos e ações geradas por cada anúncio</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Palavras-chave que geram mais ações</b> <span class="d">o que vale investir mais</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Públicos de retorno</b> <span class="d">quem visitou mas ainda não avançou</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Melhor horário e dia</b> <span class="d">quando concentrar o orçamento</span></span></div>
-              <div class="cat-item"><span class="dot integracao"></span><span><b>Públicos semelhantes</b> <span class="d">pessoas com perfil parecido com quem já gerou contato</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Página de entrada</b> <span class="d">por onde a visita começou</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Cliques e impressões por campanha</b> <span class="d">por campanha e por anúncio</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Custo por ação registrada</b> <span class="d">quanto custa cada ação importante registrada</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Ações registradas por campanha</b> <span class="d">ações geradas por cada anúncio</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Palavras-chave que geram mais ações</b> <span class="d">o que vale investir mais</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Públicos de retorno</b> <span class="d">quem visitou mas ainda não avançou</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Melhor horário e dia</b> <span class="d">quando concentrar o orçamento</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Públicos semelhantes</b> <span class="d">pessoas com perfil parecido com quem já interagiu com o site</span></span></div>
             </div>
           </div>
         </details>
 
         <details class="cat-card reveal">
           <summary class="cat-head">
-            <span class="cat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M17 6h3M4 12h4M11 12h9M4 18h13M20 18h0"/><circle cx="14" cy="6" r="2"/><circle cx="7" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg></span>
-            <span class="cat-titles"><h3>Possibilidades personalizadas</h3><span class="count">4 exemplos</span></span>
-            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            <span class="cat-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></span>
+            <span class="cat-titles"><h3>Busca e visibilidade</h3><span class="cat-sub">Como o site aparece nas buscas e em canais de divulgação.</span><span class="count">8 indicadores</span></span>
+            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
           <div class="cat-body">
             <div class="cat-items">
-              <div class="cat-item"><span class="dot personalizada"></span><span><b>Integração com CRM</b> <span class="d">acompanhar contatos que avançaram na jornada comercial</span></span></div>
-              <div class="cat-item"><span class="dot personalizada"></span><span><b>Eventos personalizados</b> <span class="d">ações específicas do seu negócio, definidas sob medida</span></span></div>
-              <div class="cat-item"><span class="dot personalizada"></span><span><b>Metas específicas da operação</b> <span class="d">indicadores alinhados ao seu funil real</span></span></div>
-              <div class="cat-item"><span class="dot personalizada"></span><span><b>Painéis sob medida</b> <span class="d">recortes e cruzamentos definidos junto com você</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Impressões e cliques</b> <span class="d">quantas vezes você aparece e é clicado nas buscas</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Taxa de cliques</b> <span class="d">proporção de quem clica ao ver seu site nas buscas</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Posição média</b> <span class="d">em que posição você aparece nas buscas</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>O que as pessoas digitam</b> <span class="d">as buscas reais que levam até você</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Páginas indexadas</b> <span class="d">o que o Google já enxerga do seu site</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Velocidade percebida</b> <span class="d">o quão rápido seu site parece carregar</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Desempenho no celular</b> <span class="d">como o Google avalia sua versão mobile</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Alcance em anúncios</b> <span class="d">quantas pessoas viram os anúncios</span></span></div>
+            </div>
+          </div>
+        </details>
+
+        <details class="cat-card reveal">
+          <summary class="cat-head">
+            <span class="cat-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M17 6h3M4 12h4M11 12h9M4 18h13M20 18h0"/><circle cx="14" cy="6" r="2"/><circle cx="7" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg></span>
+            <span class="cat-titles"><h3>Possibilidades sob medida</h3><span class="cat-sub">Recortes definidos conforme a operação e as fontes disponíveis.</span><span class="count">4 exemplos</span></span>
+            <svg class="cat-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="cat-body">
+            <div class="cat-items">
+              <div class="cat-item"><span class="dot"></span><span><b>Integração com CRM</b> <span class="d">acompanhar contatos que avançaram na jornada comercial</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Eventos personalizados</b> <span class="d">ações específicas do seu negócio, definidas sob medida</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Metas específicas da operação</b> <span class="d">indicadores alinhados ao seu funil real</span></span></div>
+              <div class="cat-item"><span class="dot"></span><span><b>Painéis sob medida</b> <span class="d">recortes e cruzamentos definidos junto com você</span></span></div>
             </div>
           </div>
         </details>
 
       </div>
+      <p class="cat-foot reveal">O conjunto final é definido conforme o objetivo do negócio, a estrutura do site e as fontes disponíveis. Indicadores de integrações ou configurações sob medida só entram quando fizerem sentido e forem tecnicamente possíveis.</p>
     </div>
   </section>
 
-  <!-- ============ 7. DASHBOARD ============ -->
-  <section class="section alt" id="dashboard">
-    <div class="wrap">
-      <div class="reveal in center" style="max-width:620px;margin:0 auto;">
-        <span class="eyebrow">O painel</span>
-        <h2 style="margin-top:1rem;">Um painel só seu, feito para decidir, não para decifrar.</h2>
-        <p class="section-lede" style="margin-left:auto;margin-right:auto;">Nada de planilha, nada de relatório técnico. Um lugar só, atualizado automaticamente conforme a disponibilidade de cada fonte.</p>
-      </div>
-
-      <div class="dash-frame reveal">
-        <div class="dash-topbar">
-          <div class="traffic"><span></span><span></span><span></span></div>
-          <span class="url">dashboard.suaempresa.com.br</span>
-        </div>
-        <div class="dash-body">
-          <div class="dash-kpis">
-            <div class="kpi"><span class="label">Visitantes no período</span><span class="value" data-count="342">0</span><span class="delta up">↑ 12% vs. ontem</span></div>
-            <div class="kpi"><span class="label">Ações importantes</span><span class="value" data-count="18">0</span><span class="delta up">↑ 4 a mais</span></div>
-            <div class="kpi"><span class="label">Cliques para contato</span><span class="value" data-count="27">0</span><span class="delta up">↑ 0.6 pt</span></div>
-            <div class="kpi"><span class="label">Serviço com maior interesse</span><span class="value" style="font-size:1.05rem;">Consultoria Comercial</span><span class="delta">42% dos cliques em serviços</span></div>
-          </div>
-          <div class="dash-main">
-            <div class="dash-panel">
-              <h4>Visitantes nos últimos 14 dias</h4>
-              <div class="chart-wrap"><canvas id="dashChart"></canvas></div>
-            </div>
-            <div class="dash-panel">
-              <h4>Canal com mais engajamento</h4>
-              <div class="source-row"><span class="name">Google Ads</span><div class="bar-track"><div class="bar-fill" data-w="42"></div></div><span class="pct">42%</span></div>
-              <div class="source-row"><span class="name">Instagram</span><div class="bar-track"><div class="bar-fill" data-w="28"></div></div><span class="pct">28%</span></div>
-              <div class="source-row"><span class="name">Indicação</span><div class="bar-track"><div class="bar-fill" data-w="18"></div></div><span class="pct">18%</span></div>
-              <div class="source-row"><span class="name">Direto</span><div class="bar-track"><div class="bar-fill" data-w="12"></div></div><span class="pct">12%</span></div>
-            </div>
-          </div>
-
-          <div class="dash-ai-panel">
-            <div class="dash-ai-head">
-              <span class="ai-avatar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
-              </span>
-              <span class="ai-name-wrap">
-                <span class="ai-name">Assistente de Inteligência Comercial</span>
-                <span class="ai-status" id="aiStatus">analisando seus dados agora</span>
-              </span>
-            </div>
-            <div class="dash-ai-msg typing" id="aiTyping"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>
-            <div class="dash-ai-msg" id="aiMsg1" style="opacity:0;">
-              <p>Notei uma queda de 18% na conversão pelo celular essa semana. A maior parte das saídas acontece antes de rolar até a seção de contato.</p>
-            </div>
-            <div class="dash-ai-msg suggestion" id="aiMsg2" style="opacity:0;">
-              <p><b>Sugestão:</b> aproximar o botão de contato do topo da página pode recuperar parte dessas conversões.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <p class="dash-caption reveal center">E muitos outros dados, para enxergar onde a campanha e o site já conversam com o seu público, e onde ainda não.</p>
-    </div>
-  </section>
-
-  <!-- ============ 8. O RESULTADO ============ -->
-  <section class="section" id="resultado">
-    <div class="wrap">
-      <div class="reveal in center" style="max-width:620px;margin:0 auto;">
-        <span class="eyebrow">A transformação</span>
-        <h2 style="margin-top:1rem;">O foco nunca foi o software. Sempre foi a decisão.</h2>
-      </div>
-      <div class="transform-grid">
-        <div class="transform-col before reveal">
-          <span class="tag">Antes</span>
-          <div class="transform-item"><span class="mk">✕</span><span>Decisões baseadas principalmente em percepção</span></div>
-          <div class="transform-item"><span class="mk">✕</span><span>Pouco conhecimento sobre o interesse dos visitantes</span></div>
-          <div class="transform-item"><span class="mk">✕</span><span>Ofertas destacadas sem saber o que recebe atenção</span></div>
-          <div class="transform-item"><span class="mk">✕</span><span>Dificuldade para avaliar campanhas</span></div>
-          <div class="transform-item"><span class="mk">✕</span><span>Site usado apenas como presença institucional</span></div>
-        </div>
-        <div class="transform-arrow reveal reveal-delay-1" aria-hidden="true">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </div>
-        <div class="transform-col after reveal reveal-delay-2">
-          <span class="tag">Depois</span>
-          <div class="transform-item"><span class="mk">✓</span><span>Decisões apoiadas em padrões reais de comportamento</span></div>
-          <div class="transform-item"><span class="mk">✓</span><span>Mais clareza sobre serviços e conteúdos que despertam interesse</span></div>
-          <div class="transform-item"><span class="mk">✓</span><span>Melhor contexto para destacar ofertas</span></div>
-          <div class="transform-item"><span class="mk">✓</span><span>Campanhas avaliadas também pelo que acontece depois do clique</span></div>
-          <div class="transform-item"><span class="mk">✓</span><span>Site utilizado como fonte de informação comercial</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 9. CTA FINAL ============ -->
-  <section class="section final-cta" id="contato">
+  <!-- ============ 6. CTA FINAL ============ -->
+  <section class="section section-dark final-cta" id="contato">
     <div class="wrap-narrow">
-      <span class="eyebrow">Chegou a hora</span>
-      <h2 style="margin-top:1.1rem;">Seu site pode fazer muito mais do que apenas existir.</h2>
-      <p style="margin-top:1.1rem;color:var(--void-muted);font-size:1.08rem;max-width:46ch;margin-left:auto;margin-right:auto;">Entenda o que chama atenção, o que aproxima uma decisão e quais ações realmente acontecem depois do clique.</p>
-      <div class="final-lines reveal">
-        <span>Transforme visitantes em informação.</span>
-        <span>Informação em decisão.</span>
-        <span>Decisão em crescimento.</span>
-      </div>
+      <span class="eyebrow" style="justify-content:center;">Próximo passo</span>
+      <h2 style="margin-top:1.1rem;">Seu site já reúne esses sinais. Falta organizá-los.</h2>
+      <p class="final-support">Veja a demonstração para entender, na prática, como as informações podem ser organizadas e usadas para orientar decisões.</p>
       <div class="final-actions">
-        <a href="https://wa.me/554791960107?text=Ol%C3%A1!%20Quero%20entender%20como%20funciona%20a%20Intelig%C3%AAncia%20Comercial%20para%20Sites." class="btn btn-primary" style="font-size:1.05rem;padding:1.1rem 2.4rem;">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.53 2 12.04 2zm0 18.2c-1.5 0-2.97-.4-4.25-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.37c0-4.53 3.69-8.22 8.22-8.22 4.53 0 8.22 3.69 8.22 8.22s-3.7 8.24-8.14 8.24zm4.5-6.13c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.65.81-.79.97-.15.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.22-1.46-1.37-1.7-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
-          Falar no WhatsApp
-        </a>
-        <a href="demonstracao/" class="btn btn-demo" target="_blank" rel="noopener" style="font-size:1.05rem;padding:1.1rem 2.4rem;">
+        <a href="./demonstracao/index.html" class="btn btn-primary" target="_blank" rel="noopener" style="font-size:1.05rem;padding:1.1rem 2.4rem;">
           Ver demonstração
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
+      </div>
+      <div class="final-divider" aria-hidden="true"></div>
+      <div class="final-lines reveal">
+        <span>Visitas viram informação.</span>
+        <span>Informação vira clareza.</span>
+        <span>Clareza orienta a decisão.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. DÚVIDAS FREQUENTES ============ -->
+  <section class="section alt" id="duvidas">
+    <div class="wrap-narrow">
+      <div class="section-head reveal in center">
+        <span class="eyebrow" style="justify-content:center;">Dúvidas frequentes</span>
+        <h2>O que vale saber antes de começar.</h2>
+      </div>
+      <div class="faq-groups">
+
+        <span class="faq-group-label">Sobre o acompanhamento</span>
+        <div class="faq-list">
+          <details class="faq-item reveal">
+            <summary class="faq-summary">O painel é meu?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">O acompanhamento é montado para o seu negócio e você tem acesso aos indicadores definidos. O formato exato do painel é alinhado conforme o seu caso e as fontes disponíveis; não prometemos um domínio próprio ou login exclusivo como regra.</div>
+          </details>
+          <details class="faq-item reveal">
+            <summary class="faq-summary">Isso muda o meu site?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">Não. A camada de acompanhamento é instalada sem alterar o visual nem o funcionamento do site.</div>
+          </details>
+          <details class="faq-item reveal">
+            <summary class="faq-summary">Preciso entender de tecnologia?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">Não. A proposta é traduzir o comportamento observado no site em informações úteis para o negócio, sem exigir que você domine ferramentas técnicas. A parte de configuração é conduzida conforme o escopo definido.</div>
+          </details>
+          <details class="faq-item reveal">
+            <summary class="faq-summary">Isso funciona para um site que não vende diretamente?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">Sim. O acompanhamento também ajuda a entender páginas, conteúdos e ofertas que apoiam pesquisa, comparação e confiança antes de uma conversa ou decisão em outro canal. Ele não comprova, por si só, a venda que possa acontecer depois.</div>
+          </details>
+        </div>
+
+        <span class="faq-group-label">Sobre dados e recursos</span>
+        <div class="faq-list">
+          <details class="faq-item reveal">
+            <summary class="faq-summary">Quais indicadores entram no meu acompanhamento?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">O conjunto é definido conforme o objetivo do negócio, a estrutura do site e as fontes disponíveis. Você pode começar pelo essencial e incluir integrações ou configurações específicas quando fizerem sentido.</div>
+          </details>
+          <details class="faq-item reveal">
+            <summary class="faq-summary">Preciso liberar acesso a outras ferramentas?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">Apenas quando algum indicador depender de uma fonte externa, como Google Ads, Search Console, CRM ou ferramenta de mapa de calor. Os acessos necessários são avaliados de acordo com o escopo.</div>
+          </details>
+          <details class="faq-item reveal">
+            <summary class="faq-summary">Quando começo a receber leituras úteis?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">Depois da configuração e do acúmulo de dados suficientes para observar padrões. O tempo necessário varia conforme o volume de visitas, as ações acompanhadas e as fontes conectadas.</div>
+          </details>
+          <details class="faq-item reveal">
+            <summary class="faq-summary">E a privacidade dos visitantes?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">Sim. A coleta segue o consentimento de cookies previsto pela LGPD: o visitante escolhe aceitar ou recusar pelo banner de cookies do site, e as medições respeitam essa escolha. Para dados mais sensíveis, publicidade e gravações de sessão, o consentimento adicional do visitante também é exigido antes da coleta.</div>
+          </details>
+          <details class="faq-item reveal">
+            <summary class="faq-summary">A análise com IA está incluída?
+              <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-answer">Não. A análise com IA é um recurso opcional, contratado à parte. Ela trabalha com métricas agregadas para levantar hipóteses e sugestões que devem ser avaliadas por você.</div>
+          </details>
+        </div>
+
       </div>
     </div>
   </section>
@@ -825,7 +979,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
       <span class="footer-brand"><span class="dot"></span>Inteligência Comercial</span>
       <span>O que acontece no seu site, traduzido em decisão.</span>
     </div>
-    <p style="margin-top:1.2rem;font-size:.78rem;color:var(--void-faint);max-width:60ch;">Os indicadores disponíveis variam conforme a estrutura do site, os acessos fornecidos, as integrações contratadas, o volume de dados e as configurações de privacidade e consentimento.</p>
+    <p class="footer-note">Os indicadores disponíveis variam conforme a estrutura do site, os acessos fornecidos, as integrações contratadas, o volume de dados e as configurações de privacidade e consentimento. Os números exibidos na demonstração e no exemplo de painel são fictícios e ilustrativos.</p>
   </div>
 </footer>
 
@@ -836,14 +990,16 @@ footer{padding:3rem 0;background:var(--void-bg);}
 
   /* -------- nav: fundo aparece só depois do scroll -------- */
   var nav = document.getElementById("siteNav");
-  var onScroll = function(){
-    if (window.scrollY > 12) nav.classList.add("scrolled");
-    else nav.classList.remove("scrolled");
-  };
-  document.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  if (nav) {
+    var onScroll = function(){
+      if (window.scrollY > 12) nav.classList.add("scrolled");
+      else nav.classList.remove("scrolled");
+    };
+    document.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
 
-  /* -------- reveal on scroll -------- */
+  /* -------- revelação no scroll (fallback: mostra tudo) -------- */
   var revealEls = document.querySelectorAll(".reveal:not(.in)");
   if ("IntersectionObserver" in window && !reduceMotion) {
     var io = new IntersectionObserver(function(entries){
@@ -859,7 +1015,29 @@ footer{padding:3rem 0;background:var(--void-bg);}
     revealEls.forEach(function(el){ el.classList.add("in"); });
   }
 
-  /* -------- contadores animados dos KPIs -------- */
+  /* -------- acordeão do catálogo: abrir uma categoria fecha as demais -------- */
+  var catDetails = document.querySelectorAll(".cat-list > details");
+  catDetails.forEach(function(d){
+    d.addEventListener("toggle", function(){
+      if (!d.open) return;
+      catDetails.forEach(function(other){
+        if (other !== d) other.open = false;
+      });
+    });
+  });
+
+  /* -------- acordeão da FAQ: abrir uma pergunta fecha as demais (nos dois grupos) -------- */
+  var faqDetails = document.querySelectorAll("#duvidas details.faq-item");
+  faqDetails.forEach(function(d){
+    d.addEventListener("toggle", function(){
+      if (!d.open) return;
+      faqDetails.forEach(function(other){
+        if (other !== d) other.open = false;
+      });
+    });
+  });
+
+  /* -------- painel ilustrativo: contadores e barras -------- */
   var counters = document.querySelectorAll("[data-count]");
   var animateCounter = function(el){
     var target = parseFloat(el.getAttribute("data-count"));
@@ -879,46 +1057,32 @@ footer{padding:3rem 0;background:var(--void-bg);}
     requestAnimationFrame(step);
   };
   var barFills = document.querySelectorAll(".bar-fill");
-  var aiTyping = document.getElementById("aiTyping");
-  var aiMsg1 = document.getElementById("aiMsg1");
-  var aiMsg2 = document.getElementById("aiMsg2");
-  var aiStatus = document.getElementById("aiStatus");
   var dashObserved = false;
-  var dashSection = document.getElementById("dashboard");
+  var dashSection = document.getElementById("painel");
 
-  var playAiSequence = function(){
-    if (reduceMotion) {
-      if (aiTyping) aiTyping.style.display = "none";
-      if (aiMsg1) aiMsg1.style.opacity = 1;
-      if (aiMsg2) aiMsg2.style.opacity = 1;
-      return;
-    }
-    setTimeout(function(){
-      if (aiTyping) aiTyping.style.display = "none";
-      if (aiMsg1) aiMsg1.style.opacity = 1;
-    }, 1200);
-    setTimeout(function(){
-      if (aiMsg2) aiMsg2.style.opacity = 1;
-      if (aiStatus) aiStatus.textContent = "3 melhorias identificadas hoje";
-    }, 2000);
+  var revealDash = function(){
+    counters.forEach(animateCounter);
+    barFills.forEach(function(b){ b.style.width = b.getAttribute("data-w") + "%"; });
   };
 
-  if ("IntersectionObserver" in window) {
+  if ("IntersectionObserver" in window && dashSection) {
     var dashIo = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if (entry.isIntersecting && !dashObserved) {
           dashObserved = true;
-          counters.forEach(animateCounter);
-          barFills.forEach(function(b){ b.style.width = b.getAttribute("data-w") + "%"; });
-          playAiSequence();
+          revealDash();
           dashIo.unobserve(entry.target);
         }
       });
     }, { threshold: 0.3 });
-    if (dashSection) dashIo.observe(dashSection);
+    dashIo.observe(dashSection);
+  } else {
+    /* sem observer: mostra os valores finais imediatamente */
+    counters.forEach(function(el){ el.textContent = el.getAttribute("data-count"); });
+    barFills.forEach(function(b){ b.style.width = b.getAttribute("data-w") + "%"; });
   }
 
-  /* -------- canvas: hero, visitantes se dividindo em dois caminhos -------- */
+  /* -------- canvas decorativo do hero: atividade fluindo -------- */
   var heroCanvas = document.getElementById("heroCanvas");
   if (heroCanvas && heroCanvas.getContext) {
     var ctx = heroCanvas.getContext("2d");
@@ -933,20 +1097,20 @@ footer{padding:3rem 0;background:var(--void-bg);}
     window.addEventListener("resize", resize);
 
     var goldColor = "200,162,75";
-    var fadeColor = "160,158,150";
+    var fadeColor = "150,148,140";
 
     function Particle(){ this.reset(true); }
     Particle.prototype.reset = function(initial){
-      this.x = w * (0.15 + Math.random()*0.7);
+      this.x = w * (0.12 + Math.random()*0.76);
       this.y = initial ? Math.random()*h : -10;
-      this.speed = 0.35 + Math.random()*0.55;
-      this.converts = Math.random() < 0.4;
-      this.driftTarget = this.converts ? (w*0.78 + Math.random()*w*0.15) : (w*0.05 + Math.random()*w*0.15);
+      this.speed = 0.32 + Math.random()*0.5;
+      this.highlight = Math.random() < 0.35;   /* alguns pontos em destaque (decorativo) */
+      this.driftTarget = this.highlight ? (w*0.72 + Math.random()*w*0.18) : (w*0.08 + Math.random()*w*0.2);
       this.r = 1.6 + Math.random()*1.6;
       this.splitY = h * (0.45 + Math.random()*0.25);
     };
     var particles = [];
-    var count = Math.max(22, Math.min(46, Math.floor(w/22)));
+    var count = Math.max(20, Math.min(44, Math.floor(w/24)));
     for (var i=0;i<count;i++) particles.push(new Particle());
 
     function draw(){
@@ -958,8 +1122,8 @@ footer{padding:3rem 0;background:var(--void-bg);}
           p.x += (p.driftTarget - p.x) * Math.min(pull,0.05);
         }
         if (p.y > h + 10) p.reset(false);
-        var alpha = p.converts ? 0.85 : 0.35;
-        var color = p.converts ? goldColor : fadeColor;
+        var alpha = p.highlight ? 0.85 : 0.32;
+        var color = p.highlight ? goldColor : fadeColor;
         ctx.beginPath();
         ctx.fillStyle = "rgba(" + color + "," + alpha + ")";
         ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
@@ -971,7 +1135,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
     else { draw(); }
   }
 
-  /* -------- canvas: gráfico do dashboard fictício -------- */
+  /* -------- canvas: gráfico do painel ilustrativo (dados simulados) -------- */
   var dashCanvas = document.getElementById("dashChart");
   if (dashCanvas && dashCanvas.getContext) {
     var dctx = dashCanvas.getContext("2d");
@@ -979,6 +1143,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
     var drawn = false;
     var drawChart = function(){
       var cw = dashCanvas.clientWidth, ch = dashCanvas.clientHeight;
+      if (!cw || !ch) return;
       dashCanvas.width = cw*ddpr; dashCanvas.height = ch*ddpr;
       dctx.setTransform(ddpr,0,0,ddpr,0,0);
       var data = [58,64,60,72,80,76,90,86,96,104,98,112,120,118];
@@ -1025,7 +1190,7 @@ footer{padding:3rem 0;background:var(--void-bg);}
         });
       }, { threshold: 0.2 });
       chartIo.observe(dashCanvas);
-    } else { drawChart(); }
+    } else { drawChart(); drawn = true; }
     window.addEventListener("resize", function(){ if (drawn) drawChart(); });
   }
 })();
